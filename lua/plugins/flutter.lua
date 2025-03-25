@@ -5,6 +5,8 @@ return {
       "nvim-lua/plenary.nvim",
       "stevearc/dressing.nvim",
       "mfussenegger/nvim-dap",
+      "theHamsta/nvim-dap-virtual-text",
+      "nvim-treesitter/nvim-treesitter",
     },
     config = function()
       require("flutter-tools").setup({
@@ -16,6 +18,9 @@ return {
         },
         debugger = {
           enabled = true,
+        },
+        dev_log = {
+          enabled = false,
         },
         lsp = {
           settings = {
