@@ -9,6 +9,8 @@ map("x", "I", ":s/\\(\\s*\\)/\\0/ | nohl" .. ("<left>"):rep(8))
 
 map("x", "A", ":s/$// | nohl" .. ("<left>"):rep(8))
 
+--- F12 para rodar o comando FlutterRun
+map("n", "<F12>", ":lua require('flutter-tools.commands')<CR>")
 --- F5 para rodar o comando FlutterRun
 map("n", "<F5>", ":lua require('flutter-tools.commands').run()<CR>")
 --- Shift + F5 para rodar o comando FlutterQuit

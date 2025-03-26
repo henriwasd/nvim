@@ -5,7 +5,7 @@ return {
     lazy = false,
     ---@type snacks.Config
     opts = {
-      bigfile = { enabled = true },
+      bigfile = { enabled = false },
       dashboard = {
         preset = {
           pick = function(cmd, opts)
@@ -43,7 +43,7 @@ return {
       picker = { enabled = true },
       quickfile = { enabled = true },
       scope = { enabled = true },
-      scroll = { enabled = true },
+      scroll = { enabled = false },
       statuscolumn = { enabled = true },
       words = { enabled = true },
       styles = {
