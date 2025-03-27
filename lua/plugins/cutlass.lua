@@ -1,15 +1,17 @@
 return {
   {
     "gbprod/cutlass.nvim",
+    lazy = false,
     opts = {
       {
-        cut_key = "x",
+        cut_key = nil,
         override_del = nil,
         exclude = {},
         registers = {
-          select = "_",
-          delete = "_",
-          change = "_",
+          select = "s",
+          delete = "d",
+          change = "c",
+          yank = "y",
         },
       },
     },
