@@ -9,11 +9,7 @@ map("x", "I", ":s/\\(\\s*\\)/\\0/ | nohl" .. ("<left>"):rep(8))
 map("x", "A", ":s/$// | nohl" .. ("<left>"):rep(8))
 
 --- F12 para rodar o comando FlutterRun
-map("n", "<F12>", ":lua require('flutter-tools.commands')<CR>")
---- F5 para rodar o comando FlutterRun
-map("n", "<F5>", ":lua require('flutter-tools.commands').run()<CR>")
---- Shift + F5 para rodar o comando FlutterQuit
-map("n", "<S-F5>", ":lua require('flutter-tools.commands').quit()<CR>")
+map("n", "<leader>df", ":lua require('flutter-tools.commands')<CR>")
 
 --- F9 para alternar breakpoint
 map("n", "<F9>", ":lua require'dap'.toggle_breakpoint()<CR>")
@@ -27,3 +23,5 @@ map("n", "<F10>", ":lua require'dap'.step_over()<CR>")
 map("n", "<F11>", ":lua require'dap'.step_into()<CR>")
 --- Shift + F11 para sair da função (step out)
 map("n", "<S-F11>", ":lua require'dap'.step_out()<CR>")
+--- F12 para abrir o console de depuração
+map("n", "<leader>dd", ":DapViewToggle<CR>")

@@ -24,6 +24,11 @@ return {
               -- Hide the terminal when starting a new session
               start_hidden = false,
             },
+            winbar = {
+              position = "right",
+              hide = {},
+              start_hidden = false,
+            },
           },
         },
       },
