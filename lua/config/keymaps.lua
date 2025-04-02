@@ -15,5 +15,15 @@ map("n", "<F5>", ":lua require('flutter-tools.commands').run()<CR>")
 --- Shift + F5 para rodar o comando FlutterQuit
 map("n", "<S-F5>", ":lua require('flutter-tools.commands').quit()<CR>")
 
---- d Para next line in debug mode
-map("n", "<Leader>dd", ":lua require'dap'.step_over()<CR>")
+--- F9 para alternar breakpoint
+map("n", "<F9>", ":lua require'dap'.toggle_breakpoint()<CR>")
+--- F5 para continuar ou iniciar depuração
+map("n", "<F5>", ":lua require'dap'.continue()<CR>")
+--- Shift + F5 para parar depuração
+map("n", "<S-F5>", ":lua require'dap'.terminate()<CR>")
+--- F10 para avançar uma linha (step over)
+map("n", "<F10>", ":lua require'dap'.step_over()<CR>")
+--- F11 para entrar na função (step into)
+map("n", "<F11>", ":lua require'dap'.step_into()<CR>")
+--- Shift + F11 para sair da função (step out)
+map("n", "<S-F11>", ":lua require'dap'.step_out()<CR>")
