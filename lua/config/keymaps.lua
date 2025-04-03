@@ -9,7 +9,7 @@ map("x", "I", ":s/\\(\\s*\\)/\\0/ | nohl" .. ("<left>"):rep(8))
 map("x", "A", ":s/$// | nohl" .. ("<left>"):rep(8))
 
 --- F12 para rodar o comando FlutterRun
-map("n", "<leader>df", ":lua require('flutter-tools.commands')<CR>")
+map("n", "<F12>", ":lua require('flutter-tools.commands')<CR>")
 
 --- F9 para alternar breakpoint
 map("n", "<F9>", ":lua require'dap'.toggle_breakpoint()<CR>")
