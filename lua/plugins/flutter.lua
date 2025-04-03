@@ -4,8 +4,6 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "stevearc/dressing.nvim",
-      "rcarriga/nvim-dap-ui",
-      dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
     },
     lazy = true,
     config = function()
