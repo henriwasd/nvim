@@ -23,5 +23,3 @@ map("n", "<F10>", ":lua require'dap'.step_over()<CR>")
 map("n", "<F11>", ":lua require'dap'.step_into()<CR>")
 --- Shift + F11 para sair da função (step out)
 map("n", "<S-F11>", ":lua require'dap'.step_out()<CR>")
---- F12 para abrir o console de depuração
-map("n", "<leader>dd", ":DapViewToggle<CR>")
