@@ -1,6 +1,6 @@
 return {
   {
-    "ellison/gruvbox.nvim",
+    "ellisonleao/gruvbox.nvim",
     opts = {
       transparent_mode = true,
     },
