@@ -6,10 +6,10 @@ vim.g.lazyvim_prettier_needs_config = false
 -- Check if 'pwsh' is executable and set the shell accordingly
 if vim.fn.executable("pwsh") == 1 then
   vim.o.shell = "pwsh"
-end
-
-if vim.fn.executable("powershell") == 1 then
-  vim.o.shell = "powershell"
+else
+  if vim.fn.executable("powershell") == 1 then
+    vim.o.shell = "powershell"
+  end
 end
 
 if vim.fn.executable("zsh") == 1 then
