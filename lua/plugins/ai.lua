@@ -38,11 +38,10 @@ return {
       behaviour = {
         auto_suggestions = false,
       },
-      provider = "claude",
-      claude = {
-        model = "claude-3.5-sonnet",
-        temperature = 0,
-        max_tokens = 20000,
+      provider = "ollama",
+      ollama = {
+        endpoint = "http://localhost:11434",
+        model = "deepseek-r1:7b",
       },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
