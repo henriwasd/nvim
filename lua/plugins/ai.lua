@@ -1,14 +1,6 @@
 local prefix = "<Leader>a"
 return {
   {
-    "zbirenbaum/copilot.lua",
-    opts = function(_, opts)
-      opts.suggestion = opts.suggestion or {}
-      opts.suggestion.debounce = 200
-      return opts
-    end,
-  },
-  {
     "yetone/avante.nvim",
     event = "VeryLazy",
     lazy = true,
@@ -36,7 +28,7 @@ return {
         },
       },
       behaviour = {
-        auto_suggestions = false,
+        auto_suggestions = true,
       },
       provider = "ollama",
       ollama = {
