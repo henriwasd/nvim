@@ -25,7 +25,7 @@ return {
         },
       })
       require("lspconfig").dartls.setup({
-        cmd = { "dart", "language-server", "--protocol=lsp" },
+        -- cmd = { "dart", "language-server", "--protocol=lsp" },
         opts = {
           inlay_hints = {
             enabled = false,

@@ -30,10 +30,11 @@ return {
       behaviour = {
         auto_suggestions = true,
       },
-      provider = "ollama",
-      ollama = {
-        endpoint = "http://localhost:11434",
-        model = "deepseek-r1:1.5b",
+      providers = {
+        ollama = {
+          endpoint = "http://localhost:11434",
+          model = "deepseek-r1:1.5b",
+        },
       },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
