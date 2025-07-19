@@ -5,10 +5,6 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       "stevearc/dressing.nvim",
-      -- "migbyte-0/archflow-nvim",
-      -- config = function()
-      --   require("archflow").setup()
-      -- end,
     },
     config = function()
       require("flutter-tools").setup({
@@ -25,7 +21,6 @@ return {
         },
       })
       require("lspconfig").dartls.setup({
-        -- cmd = { "dart", "language-server", "--protocol=lsp" },
         opts = {
           inlay_hints = {
             enabled = false,
