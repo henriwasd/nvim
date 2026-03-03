@@ -176,6 +176,15 @@ vim.o.confirm = true
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
+-- Suppress LSP RPC and AI errors to prevent blocking the UI
+vim.notify = function(msg, log_level, _opts)
+  local silent_patterns = { "exit code", "LSP", "32603", "minuet", "gemini", "request failed" }
+  for _, pattern in ipairs(silent_patterns) do
+    if msg:lower():match(pattern) then return end
+  end
+  return vim.api.nvim_echo({{msg, "Normal"}}, true, {})
+end
+
 -- Clear highlights on search when pressing <Esc> in normal mode
 --  See `:help hlsearch`
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
@@ -183,14 +192,18 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Diagnostic Config & Keymaps
 -- See :help vim.diagnostic.Opts
 vim.diagnostic.config {
-  update_in_insert = false,
+  update_in_insert = true, -- Mostrar enquanto digita
   severity_sort = true,
   float = { border = 'rounded', source = 'if_many' },
   underline = { severity = vim.diagnostic.severity.ERROR },
 
-  -- Can switch between these as you prefer
-  virtual_text = true, -- Text shows up at the end of the line
-  virtual_lines = false, -- Text shows up underneath the line, with virtual lines
+  -- Mostra o erro no final da linha (Virtual Text)
+  virtual_text = {
+    prefix = '●', -- Caractere simples no início do erro
+    spacing = 4,
+    source = "if_many",
+  },
+  virtual_lines = false, -- Desabilitar linhas virtuais para não pular o código
 
   -- Auto open the float, so you can easily read the errors when jumping with `[d` and `]d`
   jump = { float = true },
@@ -826,7 +839,14 @@ require('lazy').setup({
       },
 
       sources = {
-        default = { 'lsp', 'path', 'snippets' },
+        default = { 'lsp', 'path', 'snippets', 'minuet' },
+        providers = {
+          minuet = {
+            name = 'minuet',
+            module = 'minuet.blink',
+            score_offset = 8, -- Boost the priority of AI suggestions
+          },
+        },
       },
 
       snippets = { preset = 'luasnip' },

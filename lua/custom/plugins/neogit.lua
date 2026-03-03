@@ -21,6 +21,7 @@ return {
       -- Adicionalmente para Diffs puros:
       { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Diffview Open" },
       { "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", desc = "Current File History" },
+      { "<leader>gx", "<cmd>DiffviewClose<cr>", desc = "Diffview Close" },
     },
   },
 }
