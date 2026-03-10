@@ -36,6 +36,9 @@ return {
             lineLength = 120,
           },
         },
+        debugger = {
+          enabled = true,
+        },
       })
     end,
   },

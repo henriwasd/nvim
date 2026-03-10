@@ -6,18 +6,27 @@ return {
   config = function()
     local dap = require("dap")
 
-    local ok, flutter_dap = pcall(require, "flutter-tools.dap")
-    if ok then
-      local adapter = flutter_dap.get_adapter()
-      dap.adapters.dart = adapter
+    local function get_flutter_path()
+      local data_path = vim.fn.stdpath("data")
+      if vim.fn.has("win32") == 1 then
+        return data_path .. "/flutter/bin/flutter.bat"
+      else
+        return data_path .. "/flutter/bin/flutter"
+      end
     end
+
+    dap.adapters.dart = {
+      type = "executable",
+      command = get_flutter_path(),
+      args = { "debug_adapter" },
+    }
 
     dap.configurations.dart = {
       {
-        name = "Launch Dart",
+        name = "Launch Flutter",
         type = "dart",
         request = "launch",
-        program = "${workspaceFolder}/bin/${workspaceFolderBasename}.dart",
+        program = "${workspaceFolder}/lib/main.dart",
         cwd = "${workspaceFolder}",
       },
     }
