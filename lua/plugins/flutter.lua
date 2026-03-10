@@ -36,9 +36,6 @@ return {
             lineLength = 120,
           },
         },
-        dap = {
-          adapter = require("flutter-tools.dap").get_adapter(),
-        },
       })
     end,
   },
