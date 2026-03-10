@@ -43,7 +43,7 @@ return {
           },
         },
         debugger = {
-          enabled = true,
+          enabled = false,
         },
       })
     end,
