@@ -6,16 +6,18 @@ return {
   config = function()
     local dap = require("dap")
 
-    local function get_flutter_bin()
-      if vim.fn.has("win32") == 1 then
-        return vim.fn.stdpath("data") .. "/flutter/bin/flutter.bat"
-      end
-      return "flutter"
+    local flutter_bin
+    if vim.fn.has("win32") == 1 then
+      flutter_bin = "C:/Users/hen/develop/flutter/bin/flutter.bat"
+    elseif vim.fn.has("macunix") == 1 or vim.fn.has("unix") == 1 then
+      flutter_bin = "/Users/hen/develop/flutter/bin/flutter"
+    else
+      flutter_bin = "flutter"
     end
 
     dap.adapters.dart = {
       type = "executable",
-      command = get_flutter_bin(),
+      command = flutter_bin,
       args = { "debug_adapter" },
     }
 
