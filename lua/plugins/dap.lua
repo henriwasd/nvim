@@ -1,8 +1,5 @@
 return {
   "mfussenegger/nvim-dap",
-  dependencies = {
-    "rcarriga/cmp-dap",
-  },
   config = function()
     local dap = require("dap")
 
