@@ -8,9 +8,9 @@ return {
       "stevearc/dressing.nvim",
     },
     config = function()
-      local flutter_path = nil
+      local flutter_path
       if vim.fn.has("win32") == 1 then
-        flutter_path = vim.fn.stdpath("data") .. "/flutter/bin/flutter.bat"
+        flutter_path = "C:/Users/hen/develop/flutter/bin/flutter.bat"
       end
 
       require("flutter-tools").setup({

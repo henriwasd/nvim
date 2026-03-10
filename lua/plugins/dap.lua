@@ -9,7 +9,7 @@ return {
     local flutter_bin
     if vim.fn.has("win32") == 1 then
       flutter_bin = "C:/Users/hen/develop/flutter/bin/flutter.bat"
-    elseif vim.fn.has("macunix") == 1 or vim.fn.has("unix") == 1 then
+    elseif vim.fn.has("macunix") == 1 then
       flutter_bin = "/Users/hen/develop/flutter/bin/flutter"
     else
       flutter_bin = "flutter"
