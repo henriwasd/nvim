@@ -5,14 +5,12 @@ return {
   },
   config = function()
     local dap = require("dap")
-    local flutter_path = vim.fn.stdpath("data") .. "/flutter/bin/cache/dart-sdk"
-    local debugger_path = flutter_path .. "/bin/snapshots/pub_tools.dart"
 
-    dap.adapters.dart = {
-      type = "executable",
-      command = "dart",
-      args = { debugger_path },
-    }
+    local ok, flutter_dap = pcall(require, "flutter-tools.dap")
+    if ok then
+      local adapter = flutter_dap.get_adapter()
+      dap.adapters.dart = adapter
+    end
 
     dap.configurations.dart = {
       {
