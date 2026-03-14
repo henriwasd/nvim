@@ -19,6 +19,6 @@ return {
   end,
   keys = {
     -- Mapeamento padrão do plugin para acionar o autocomplete (Ctrl + L)
-    { "<C-l>", ":OpenCodeComplete<CR>", mode = { "n", "i" }, desc = "OpenCode: Autocomplete" },
+    { "<C-l>", ":OpenCodeComplete<CR>", mode = { "i" }, desc = "OpenCode: Autocomplete" },
   },
 }

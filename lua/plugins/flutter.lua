@@ -8,17 +8,14 @@ return {
       "stevearc/dressing.nvim",
     },
     config = function()
-      local flutter_path
-      if vim.fn.has("win32") == 1 then
-        flutter_path = "C:/Users/hen/develop/flutter/bin/flutter.bat"
-      end
-
       require("flutter-tools").setup({
+        debug = {
+          enabled = true,
+        },
         ui = {
           border = "rounded",
           notification_style = "plugin",
         },
-        flutter_path = flutter_path,
         decorations = {
           statusline = {
             app_version = true,
@@ -42,8 +39,8 @@ return {
             lineLength = 120,
           },
         },
-        debugger = {
-          enabled = false,
+        widget_guides = {
+          enabled = true,
         },
       })
     end,
