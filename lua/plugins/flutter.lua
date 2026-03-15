@@ -11,6 +11,10 @@ return {
       require("flutter-tools").setup({
         debug = {
           enabled = true,
+          evaluate_to_string_in_debug_views = false,
+        },
+        dev_log = {
+          enabled = false,
         },
         ui = {
           border = "rounded",
