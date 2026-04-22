@@ -77,3 +77,7 @@ map({ "n", "v" }, "<F1>", function() LazyVim.pick("commands")() end, { desc = "C
 
 -- --- ZEN MODE / FOLDING ---
 map("n", "<C-k>z", "za", { desc = "Toggle Fold" })
+
+-- --- JUMPLIST NAVEGATION ---
+map("n", "<leader>o", "<C-o>", { desc = "Jump backward" })
+map("n", "<leader>i", "<C-i>", { desc = "Jump forward" })
