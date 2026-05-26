@@ -27,6 +27,7 @@ return {
           },
         },
         lsp = {
+          cmd = { "dart", "language-server", "--protocol=lsp" },
           color = {
             enabled = true,
             background = false,

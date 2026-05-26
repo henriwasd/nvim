@@ -6,10 +6,15 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 -- ==========================================
--- Configuração do PowerShell 7 (pwsh)
+-- Configuração do PowerShell
 -- ==========================================
+local shell = "powershell.exe"
 if vim.fn.executable("pwsh") == 1 then
-  vim.opt.shell = "pwsh"
+  shell = "pwsh"
+end
+
+if vim.fn.executable(shell) == 1 then
+  vim.opt.shell = shell
   vim.opt.shellcmdflag =
     "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
   vim.opt.shellredir = "-RedirectStandardOutput %s -NoNewWindow -Wait"
