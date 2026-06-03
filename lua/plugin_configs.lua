@@ -341,6 +341,7 @@ end
 local ok_flutter, flutter = pcall(require, "flutter-tools")
 if ok_flutter then
   flutter.setup({
+    flutter_lookup_cmd = "mise where flutter",
     debug = {
       enabled = true,
       evaluate_to_string_in_debug_views = false,
