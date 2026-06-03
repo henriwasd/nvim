@@ -233,11 +233,3 @@ map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
 map("n", "<leader>xx", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
 map("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous Diagnostic" })
 map("n", "]d", vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
-
--- --- LAZYGIT.NVIM INTEGRATION ---
-map("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
-map("n", "<leader>gl", "<cmd>LazyGitCurrentFile<cr>", { desc = "LazyGit Current File" })
-map("n", "<leader>gd", "<cmd>LazyGitFilterCurrentFile<cr>", { desc = "LazyGit File Commits" })
-map("n", "<leader>gL", "<cmd>LazyGitFilter<cr>", { desc = "LazyGit Commits" })
-map("n", "<leader>gc", "<cmd>LazyGitConfig<cr>", { desc = "LazyGit Config" })
-map("n", "<leader>gt", "<cmd>Telescope lazygit<cr>", { desc = "Telescope LazyGit" })

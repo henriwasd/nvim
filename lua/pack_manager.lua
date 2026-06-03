@@ -60,9 +60,6 @@ M.plugins = {
   -- Flutter
   { repo = "akinsho/flutter-tools.nvim", name = "flutter-tools.nvim" },
   { repo = "stevearc/dressing.nvim", name = "dressing.nvim" },
-
-  -- Git integrations
-  { repo = "kdheepak/lazygit.nvim", name = "lazygit.nvim" },
 }
 
 function M.bootstrap()
