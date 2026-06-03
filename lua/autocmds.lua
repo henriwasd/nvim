@@ -1,20 +1,10 @@
--- Autocmds are automatically loaded on the VeryLazy event
--- Default autocmds that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
---
--- Add any additional autocmds here
--- with `vim.api.nvim_create_autocmd`
---
--- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
--- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
-
 -- Sugestão de LSP baseada na extensão do arquivo, focando na velocidade de abertura
 local lsp_suggest_group = vim.api.nvim_create_augroup("lsp_suggest_on_open", { clear = true })
 vim.api.nvim_create_autocmd("FileType", {
   group = lsp_suggest_group,
   callback = function(args)
     local ft = vim.bo[args.buf].filetype
-    local ignore_fts =
-      { "lazy", "mason", "TelescopePrompt", "neo-tree", "Trouble", "dashboard", "", "text", "markdown" }
+    local ignore_fts = { "lazy", "mason", "TelescopePrompt", "neo-tree", "Trouble", "dashboard", "", "text", "markdown" }
 
     if vim.tbl_contains(ignore_fts, ft) then
       return
@@ -75,5 +65,33 @@ vim.api.nvim_create_autocmd("FileType", {
         )
       end
     end)
+  end,
+})
+
+-- --- LSP ATTACH AUTOCMAND (Mapeamento de Teclas do LSP para buffers ativos) ---
+local lsp_attach_group = vim.api.nvim_create_augroup("lsp_attach_keymaps", { clear = true })
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = lsp_attach_group,
+  callback = function(args)
+    local bufnr = args.buf
+    local map = function(mode, lhs, rhs, opts)
+      opts = opts or {}
+      opts.buffer = bufnr
+      vim.keymap.set(mode, lhs, rhs, opts)
+    end
+
+    -- Atalhos de Navegação do LSP
+    map("n", "gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
+    map("n", "gr", function() require("telescope.builtin").lsp_references() end, { desc = "References" })
+    map("n", "gI", function() require("telescope.builtin").lsp_implementations() end, { desc = "Goto Implementation" })
+    map("n", "gD", vim.lsp.buf.declaration, { desc = "Goto Declaration" })
+    map("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation" })
+    map("n", "gK", vim.lsp.buf.signature_help, { desc = "Signature Help" })
+
+    -- Ações de Código do LSP
+    map("n", "<leader>cr", vim.lsp.buf.rename, { desc = "Rename Symbol" })
+    map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename Symbol" })
+    map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
+    map("v", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action (Visual)" })
   end,
 })

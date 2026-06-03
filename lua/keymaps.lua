@@ -1,0 +1,200 @@
+local map = vim.keymap.set
+
+-- Disable default Space key behavior to make it act cleanly as leader key
+map({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
+
+-- --- NATIVE TERMINAL TOGGLE ---
+local term_buf = nil
+local term_win = nil
+
+local function toggle_terminal()
+  if term_win and vim.api.nvim_win_is_valid(term_win) then
+    vim.api.nvim_win_hide(term_win)
+    term_win = nil
+  else
+    if not term_buf or not vim.api.nvim_buf_is_valid(term_buf) then
+      term_buf = vim.api.nvim_create_buf(false, true)
+    end
+    vim.cmd("botright 12split") -- split with 12 height at the bottom
+    term_win = vim.api.nvim_get_current_win()
+    vim.api.nvim_win_set_buf(term_win, term_buf)
+    if vim.bo[term_buf].buftype ~= "terminal" then
+      vim.fn.termopen(vim.o.shell)
+    end
+    vim.cmd("startinsert")
+  end
+end
+
+-- Keymaps for terminal toggle
+map({ "n", "t" }, "<C-/>", toggle_terminal, { desc = "Toggle Terminal" })
+map({ "n", "t" }, "<C-_>", toggle_terminal, { desc = "Toggle Terminal" })
+map({ "n", "t" }, "<C-~>", toggle_terminal, { desc = "Toggle Terminal" })
+map({ "n", "t" }, "<C-`>", toggle_terminal, { desc = "Toggle Terminal" })
+map({ "n", "t" }, "<C-@>", toggle_terminal, { desc = "Toggle Terminal (Fallback)" })
+map({ "n", "t" }, "<C-\\>", toggle_terminal, { desc = "Toggle Terminal (Fallback)" })
+
+-- Terminal mode escapes
+map("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit Terminal Mode" })
+
+-- --- NATIVE BUFFER DELETE (keep window layout) ---
+local function buf_delete()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local bd = vim.api.nvim_buf_delete
+  -- Check if buffer is modified
+  if vim.bo[bufnr].modified then
+    local choice = vim.fn.confirm(string.format("Save changes to %q?", vim.fn.bufname(bufnr)), "&Yes\n&No\n&Cancel")
+    if choice == 1 then
+      vim.cmd("write")
+    elseif choice == 2 then
+      bd(bufnr, { force = true })
+      return
+    else
+      return
+    end
+  end
+  
+  -- Swap buffer first to keep window layout
+  local windows = vim.fn.getbufinfo(bufnr)[1].windows
+  for _, win in ipairs(windows) do
+    vim.api.nvim_win_call(win, function()
+      vim.cmd("bnext")
+      if vim.api.nvim_get_current_buf() == bufnr then
+        vim.cmd("enew")
+      end
+    end)
+  end
+  bd(bufnr, {})
+end
+
+map({ "n", "t" }, "<C-w>", buf_delete, { desc = "Close Buffer" })
+map("n", "<leader>bd", buf_delete, { desc = "Delete Buffer" })
+map("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
+
+-- Criar NOVO terminal em um split abaixo
+map({ "n", "t" }, "<C-S-`>", function()
+  vim.cmd("botright split | terminal")
+  vim.cmd("startinsert")
+end, { desc = "New Split Terminal" })
+map({ "n", "t" }, "<C-S-~>", function()
+  vim.cmd("botright split | terminal")
+  vim.cmd("startinsert")
+end, { desc = "New Split Terminal" })
+
+-- --- Padrões VSCode ---
+-- Salvar
+map({ "i", "n", "v", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save file" })
+-- Selecionar tudo
+map({ "n", "v" }, "<C-a>", "ggVG", { desc = "Select all" })
+-- Copiar, colar e cortar
+map("v", "<C-c>", '"+y', { desc = "Copy to clipboard" })
+map({ "n", "v" }, "<C-v>", '"+p', { desc = "Paste from clipboard" })
+map("i", "<C-v>", '<C-r>+', { desc = "Paste from clipboard" })
+
+-- Desfazer / Refazer
+map("i", "<C-z>", "<C-o>u", { desc = "Undo" })
+map("n", "<C-z>", "u", { desc = "Undo" })
+map("i", "<C-y>", "<C-o><C-r>", { desc = "Redo" })
+map("n", "<C-y>", "<C-r>", { desc = "Redo" })
+
+-- --- NAVEGAÇÃO DE ABAS (ALT + NÚMERO) ---
+for i = 1, 9 do
+  map("n", "<A-" .. i .. ">", function()
+    if package.loaded["bufferline"] then
+      require("bufferline").go_to(i, true)
+    end
+  end, { desc = "Go to buffer " .. i })
+end
+map("n", "<A-0>", function()
+  if package.loaded["bufferline"] then
+    vim.cmd("BufferLineGoToBuffer -1")
+  end
+end, { desc = "Go to last buffer" })
+
+-- --- NAVEGAÇÃO GLOBAL (SPLITS E BUFFERS) ---
+-- Mover entre janelas (Ctrl + hjkl)
+map({ "n", "v", "t" }, "<C-h>", "<cmd>wincmd h<cr>", { desc = "Go to left window" })
+map({ "n", "v", "t" }, "<C-j>", "<cmd>wincmd j<cr>", { desc = "Go to lower window" })
+map({ "n", "v", "t" }, "<C-k>", "<cmd>wincmd k<cr>", { desc = "Go to upper window" })
+map({ "n", "v", "t" }, "<C-l>", "<cmd>wincmd l<cr>", { desc = "Go to right window" })
+
+-- Alternar entre buffers (Shift + h/l)
+map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
+map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
+
+-- Atalhos de compatibilidade (Ctrl-Shift-Alt Setas)
+map({ "n", "v", "t" }, "<C-S-M-Left>", "<cmd>wincmd h<cr>", { desc = "Go to left window" })
+map({ "n", "v", "t" }, "<C-S-M-Right>", "<cmd>wincmd l<cr>", { desc = "Go to right window" })
+map({ "n", "v", "t" }, "<C-S-M-Up>", "<cmd>wincmd k<cr>", { desc = "Go to upper window" })
+map({ "n", "v", "t" }, "<C-S-M-Down>", "<cmd>wincmd j<cr>", { desc = "Go to lower window" })
+
+
+-- --- Telescope (LazyVim Style Shortcuts) ---
+map("n", "<leader><space>", function() require("telescope.builtin").find_files() end, { desc = "Find Files (root dir)" })
+map("n", "<leader>ff", function() require("telescope.builtin").find_files() end, { desc = "Find Files (root dir)" })
+map("n", "<leader>fr", function() require("telescope.builtin").oldfiles() end, { desc = "Recent Files" })
+map("n", "<leader>fb", function() require("telescope.builtin").buffers() end, { desc = "Buffers" })
+map("n", "<leader>sg", function() require("telescope.builtin").live_grep() end, { desc = "Grep (root dir)" })
+map("n", "<leader>/", function() require("telescope.builtin").live_grep() end, { desc = "Grep (root dir)" })
+map("n", "<leader>sh", function() require("telescope.builtin").help_tags() end, { desc = "Help Tags" })
+map("n", "<leader>sk", function() require("telescope.builtin").keymaps() end, { desc = "Key Maps" })
+map("n", "<leader>sC", function() require("telescope.builtin").commands() end, { desc = "Commands Palette" })
+map({ "n", "v" }, "<C-p>", function() require("telescope.builtin").find_files() end, { desc = "Find Files" })
+map({ "n", "v" }, "<C-e>", function() require("telescope.builtin").find_files() end, { desc = "Find Files" })
+map({ "n", "v" }, "<C-S-p>", function() require("telescope.builtin").commands() end, { desc = "Command Palette" })
+map({ "n", "v" }, "<F1>", function() require("telescope.builtin").commands() end, { desc = "Command Palette" })
+
+-- --- ZEN MODE / FOLDING ---
+map("n", "<C-k>z", "za", { desc = "Toggle Fold" })
+
+-- --- JUMPLIST NAVEGATION ---
+map("n", "<leader>o", "<C-o>", { desc = "Jump backward" })
+map("n", "<leader>i", "<C-i>", { desc = "Jump forward" })
+
+-- --- File Tree Toggle (Neo-Tree) ---
+map("n", "<leader>fe", "<cmd>Neotree toggle<cr>", { desc = "Toggle Explorer" })
+map("n", "<leader>e", "<cmd>Neotree toggle<cr>", { desc = "Toggle Explorer" })
+
+-- --- Diagnostics Mappings ---
+map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
+map("n", "<leader>xx", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
+map("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous Diagnostic" })
+map("n", "]d", vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
+
+-- --- NATIVE FLOATING LAZYGIT TOGGLE ---
+local lazygit_win = nil
+local lazygit_buf = nil
+
+local function toggle_lazygit()
+  if lazygit_win and vim.api.nvim_win_is_valid(lazygit_win) then
+    vim.api.nvim_win_close(lazygit_win, true)
+    lazygit_win = nil
+  else
+    if not lazygit_buf or not vim.api.nvim_buf_is_valid(lazygit_buf) then
+      lazygit_buf = vim.api.nvim_create_buf(false, true)
+    end
+    
+    local width = math.floor(vim.o.columns * 0.85)
+    local height = math.floor(vim.o.lines * 0.85)
+    local col = math.floor((vim.o.columns - width) / 2)
+    local row = math.floor((vim.o.lines - height) / 2)
+    
+    local opts = {
+      relative = "editor",
+      width = width,
+      height = height,
+      col = col,
+      row = row,
+      style = "minimal",
+      border = "rounded",
+    }
+    
+    lazygit_win = vim.api.nvim_open_win(lazygit_buf, true, opts)
+    
+    if vim.bo[lazygit_buf].buftype ~= "terminal" then
+      vim.fn.termopen("lazygit")
+    end
+    vim.cmd("startinsert")
+  end
+end
+
+map("n", "<leader>gg", toggle_lazygit, { desc = "Toggle Lazygit (Floating)" })
