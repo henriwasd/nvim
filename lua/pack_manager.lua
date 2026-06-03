@@ -48,7 +48,6 @@ M.plugins = {
   { repo = "folke/which-key.nvim", name = "which-key.nvim" },
   { repo = "folke/ts-comments.nvim", name = "ts-comments.nvim" },
 
-
   -- Treesitter
   { repo = "nvim-treesitter/nvim-treesitter", name = "nvim-treesitter" },
 
@@ -61,6 +60,9 @@ M.plugins = {
   -- Flutter
   { repo = "akinsho/flutter-tools.nvim", name = "flutter-tools.nvim" },
   { repo = "stevearc/dressing.nvim", name = "dressing.nvim" },
+
+  -- Git integrations
+  { repo = "kdheepak/lazygit.nvim", name = "lazygit.nvim" },
 }
 
 function M.bootstrap()
@@ -113,8 +115,12 @@ function M.setup()
   M.bootstrap()
 
   -- Define user commands
-  vim.api.nvim_create_user_command("PackUpdate", function() M.update() end, {})
-  vim.api.nvim_create_user_command("PackClean", function() M.clean() end, {})
+  vim.api.nvim_create_user_command("PackUpdate", function()
+    M.update()
+  end, {})
+  vim.api.nvim_create_user_command("PackClean", function()
+    M.clean()
+  end, {})
 end
 
 return M

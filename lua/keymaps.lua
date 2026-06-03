@@ -176,6 +176,7 @@ map({ "n", "v", "t" }, "<C-S-M-Down>", "<cmd>wincmd j<cr>", { desc = "Go to lowe
 map("n", "<leader><space>", function()
   require("telescope.builtin").find_files()
 end, { desc = "Find Files (root dir)" })
+map("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File" })
 map("n", "<leader>ff", function()
   require("telescope.builtin").find_files()
 end, { desc = "Find Files (root dir)" })
@@ -233,41 +234,10 @@ map("n", "<leader>xx", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
 map("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous Diagnostic" })
 map("n", "]d", vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
 
--- --- NATIVE FLOATING LAZYGIT TOGGLE ---
-local lazygit_win = nil
-local lazygit_buf = nil
-
-local function toggle_lazygit()
-  if lazygit_win and vim.api.nvim_win_is_valid(lazygit_win) then
-    vim.api.nvim_win_close(lazygit_win, true)
-    lazygit_win = nil
-  else
-    if not lazygit_buf or not vim.api.nvim_buf_is_valid(lazygit_buf) then
-      lazygit_buf = vim.api.nvim_create_buf(false, true)
-    end
-
-    local width = math.floor(vim.o.columns * 0.85)
-    local height = math.floor(vim.o.lines * 0.85)
-    local col = math.floor((vim.o.columns - width) / 2)
-    local row = math.floor((vim.o.lines - height) / 2)
-
-    local opts = {
-      relative = "editor",
-      width = width,
-      height = height,
-      col = col,
-      row = row,
-      style = "minimal",
-      border = "rounded",
-    }
-
-    lazygit_win = vim.api.nvim_open_win(lazygit_buf, true, opts)
-
-    if vim.bo[lazygit_buf].buftype ~= "terminal" then
-      vim.fn.termopen("lazygit")
-    end
-    vim.cmd("startinsert")
-  end
-end
-
-map("n", "<leader>gg", toggle_lazygit, { desc = "Toggle Lazygit (Floating)" })
+-- --- LAZYGIT.NVIM INTEGRATION ---
+map("n", "<leader>gg", "<cmd>LazyGit<cr>", { desc = "LazyGit" })
+map("n", "<leader>gl", "<cmd>LazyGitCurrentFile<cr>", { desc = "LazyGit Current File" })
+map("n", "<leader>gd", "<cmd>LazyGitFilterCurrentFile<cr>", { desc = "LazyGit File Commits" })
+map("n", "<leader>gL", "<cmd>LazyGitFilter<cr>", { desc = "LazyGit Commits" })
+map("n", "<leader>gc", "<cmd>LazyGitConfig<cr>", { desc = "LazyGit Config" })
+map("n", "<leader>gt", "<cmd>Telescope lazygit<cr>", { desc = "Telescope LazyGit" })
