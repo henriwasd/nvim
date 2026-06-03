@@ -288,7 +288,7 @@ local ok_sm, sm = pcall(require, "supermaven-nvim")
 if ok_sm then
   sm.setup({
     keymaps = {
-      accept_suggestion = "<Tab>",
+      accept_suggestion = "<C-l>",
       clear_suggestion = "<C-]>",
       accept_word = "<C-j>",
     },
@@ -389,3 +389,10 @@ if ok_wk then
     preset = "classic",
   })
 end
+
+-- 16. Context-aware Comments (ts-comments)
+local ok_ts_comments, ts_comments = pcall(require, "ts-comments")
+if ok_ts_comments then
+  ts_comments.setup()
+end
+

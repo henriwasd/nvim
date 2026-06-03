@@ -41,3 +41,17 @@ end
 -- Fix para gap visual no Windows Terminal
 opt.cmdheight = 0
 opt.laststatus = 0
+
+-- Folding configuration using Treesitter
+opt.foldmethod = "expr"
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+opt.foldlevel = 99
+opt.foldlevelstart = 99
+
+-- Configure Neovim as the default editor for nested terminals/lazygit
+if vim.v.servername and vim.v.servername ~= "" then
+  vim.env.EDITOR = "nvim --server " .. vim.v.servername .. " --remote"
+  vim.env.VISUAL = "nvim --server " .. vim.v.servername .. " --remote"
+end
+
+

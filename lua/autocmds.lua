@@ -4,7 +4,8 @@ vim.api.nvim_create_autocmd("FileType", {
   group = lsp_suggest_group,
   callback = function(args)
     local ft = vim.bo[args.buf].filetype
-    local ignore_fts = { "lazy", "mason", "TelescopePrompt", "neo-tree", "Trouble", "dashboard", "", "text", "markdown" }
+    local ignore_fts =
+      { "lazy", "mason", "TelescopePrompt", "neo-tree", "Trouble", "dashboard", "", "text", "markdown" }
 
     if vim.tbl_contains(ignore_fts, ft) then
       return
@@ -82,8 +83,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
     -- Atalhos de Navegação do LSP
     map("n", "gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
-    map("n", "gr", function() require("telescope.builtin").lsp_references() end, { desc = "References" })
-    map("n", "gI", function() require("telescope.builtin").lsp_implementations() end, { desc = "Goto Implementation" })
+    map("n", "gr", function()
+      require("telescope.builtin").lsp_references()
+    end, { desc = "References" })
+    map("n", "gI", function()
+      require("telescope.builtin").lsp_implementations()
+    end, { desc = "Goto Implementation" })
     map("n", "gD", vim.lsp.buf.declaration, { desc = "Goto Declaration" })
     map("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation" })
     map("n", "gK", vim.lsp.buf.signature_help, { desc = "Signature Help" })

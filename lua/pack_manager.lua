@@ -46,6 +46,8 @@ M.plugins = {
   { repo = "mg979/vim-visual-multi", name = "vim-visual-multi" },
   { repo = "supermaven-inc/supermaven-nvim", name = "supermaven-nvim" },
   { repo = "folke/which-key.nvim", name = "which-key.nvim" },
+  { repo = "folke/ts-comments.nvim", name = "ts-comments.nvim" },
+
 
   -- Treesitter
   { repo = "nvim-treesitter/nvim-treesitter", name = "nvim-treesitter" },
