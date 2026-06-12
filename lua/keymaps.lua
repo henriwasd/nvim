@@ -128,6 +128,14 @@ end, { desc = "New Split Terminal" })
 -- --- Padrões VSCode ---
 -- Salvar
 map({ "i", "n", "v", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save file" })
+-- Mover linhas (Alt + j/k)
+map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move Down" })
+map("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move Up" })
+map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
+map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
+map("v", "<A-j>", ":m '>+1<cr>gv=gv", { desc = "Move Down", silent = true })
+map("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move Up", silent = true })
+
 -- Selecionar tudo
 map({ "n", "v" }, "<C-a>", "ggVG", { desc = "Select all" })
 -- Copiar, colar e cortar

@@ -98,5 +98,95 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename Symbol" })
     map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
     map("v", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action (Visual)" })
+
+  end,
+})
+
+-- --- ORGANIZAÇÃO DE IMPORTS AO SALVAR (Síncrona, Otimizada e Priorizada) ---
+local organize_imports_group = vim.api.nvim_create_augroup("organize_imports_on_save", { clear = true })
+vim.api.nvim_create_autocmd("BufWritePre", {
+  group = organize_imports_group,
+  pattern = { "*.js", "*.jsx", "*.ts", "*.tsx", "*.json", "*.jsonc" },
+  callback = function(args)
+    local get_clients = vim.lsp.get_clients or vim.lsp.get_active_clients
+    local clients = get_clients({ bufnr = args.buf })
+    if #clients == 0 then
+      return
+    end
+
+    -- Seleciona o cliente prioritário
+    local client = nil
+    local action_kinds = {}
+
+    -- Procura primeiro por biome
+    for _, c in ipairs(clients) do
+      if c.name == "biome" then
+        client = c
+        action_kinds = { "source.organizeImports.biome", "source.organizeImports" }
+        break
+      end
+    end
+
+    -- Se não encontrar biome, procura por eslint
+    if not client then
+      for _, c in ipairs(clients) do
+        if c.name == "eslint" then
+          client = c
+          action_kinds = { "source.fixAll.eslint" }
+          break
+        end
+      end
+    end
+
+    -- Se não encontrar biome nem eslint, procura por vtsls ou ts_ls
+    if not client then
+      for _, c in ipairs(clients) do
+        if c.name == "vtsls" or c.name == "ts_ls" then
+          client = c
+          action_kinds = { "source.organizeImports" }
+          break
+        end
+      end
+    end
+
+    -- Executa se tiver um cliente selecionado
+    if client then
+      local last_line = vim.api.nvim_buf_line_count(args.buf)
+      local last_char = 0
+      if last_line > 0 then
+        local lines = vim.api.nvim_buf_get_lines(args.buf, last_line - 1, last_line, false)
+        if #lines > 0 then
+          last_char = string.len(lines[1])
+        end
+      end
+      local params = {
+        textDocument = vim.lsp.util.make_text_document_params(args.buf),
+        range = {
+          start = { line = 0, character = 0 },
+          ["end"] = { line = math.max(0, last_line - 1), character = last_char }
+        },
+        context = { only = action_kinds, diagnostics = {} }
+      }
+
+      -- Executa a requisição de forma síncrona com timeout baixo de 300ms para evitar travamentos
+      local result = vim.lsp.buf_request_sync(args.buf, "textDocument/codeAction", params, 300)
+      if result and result[client.id] and result[client.id].result then
+        for _, r in ipairs(result[client.id].result) do
+          -- Resolve a ação se necessário (comum em vtsls / ts_ls)
+          if not r.edit and not r.command then
+            local resolve_result = vim.lsp.buf_request_sync(args.buf, "codeAction/resolve", r, 300)
+            if resolve_result and resolve_result[client.id] and resolve_result[client.id].result then
+              r = resolve_result[client.id].result
+            end
+          end
+
+          if r.edit then
+            vim.lsp.util.apply_workspace_edit(r.edit, client.offset_encoding)
+          elseif r.command then
+            vim.lsp.buf.execute_command(r.command)
+          end
+        end
+      end
+    end
   end,
 })
