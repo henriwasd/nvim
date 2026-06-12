@@ -190,3 +190,24 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     end
   end,
 })
+
+-- --- AUTO-RELOAD DE ARQUIVOS ALTERADOS NO DISCO (Autoread/Checktime) ---
+local autoreload_group = vim.api.nvim_create_augroup("autoreload_on_change", { clear = true })
+
+-- Verifica alterações no disco ao focar, trocar buffer ou inatividade
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+  group = autoreload_group,
+  callback = function()
+    if vim.fn.mode() ~= "c" and vim.o.buftype ~= "nofile" then
+      vim.cmd("checktime")
+    end
+  end,
+})
+
+-- Notificação amigável quando o arquivo é recarregado
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+  group = autoreload_group,
+  callback = function()
+    vim.notify("Arquivo alterado no disco. Buffer recarregado automaticamente.", vim.log.levels.WARN, { title = "Autoread" })
+  end,
+})

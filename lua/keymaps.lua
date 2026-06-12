@@ -3,6 +3,9 @@ local map = vim.keymap.set
 -- Disable default Space key behavior to make it act cleanly as leader key
 map({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 
+-- Limpar marcação de pesquisa ao pressionar <Esc> no modo Normal
+map("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clean search highlights" })
+
 -- --- NATIVE TERMINAL TOGGLE ---
 local terminals = {} -- Map of ID (number) to { buf = bufnr, win = winid }
 local last_active_term_id = 1
