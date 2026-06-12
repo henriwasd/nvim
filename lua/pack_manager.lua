@@ -60,6 +60,9 @@ M.plugins = {
   -- Flutter
   { repo = "akinsho/flutter-tools.nvim", name = "flutter-tools.nvim" },
   { repo = "stevearc/dressing.nvim", name = "dressing.nvim" },
+
+  -- Color render
+  { repo = "echasnovski/mini.hipatterns", name = "mini.hipatterns" },
 }
 
 function M.bootstrap()

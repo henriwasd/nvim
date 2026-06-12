@@ -51,6 +51,10 @@ if ok_neotree then
       },
     },
     filesystem = {
+      follow_current_file = {
+        enabled = true,
+        leave_dirs_open = false,
+      },
       filtered_items = {
         visible = true,
         hide_dotfiles = false,
@@ -394,4 +398,14 @@ end
 local ok_ts_comments, ts_comments = pcall(require, "ts-comments")
 if ok_ts_comments then
   ts_comments.setup()
+end
+
+-- 17. Color render (mini.hipatterns)
+local ok_hipatterns, hipatterns = pcall(require, "mini.hipatterns")
+if ok_hipatterns then
+  hipatterns.setup({
+    highlighters = {
+      hex_color = hipatterns.gen_highlighter.hex_color(),
+    },
+  })
 end

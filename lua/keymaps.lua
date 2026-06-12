@@ -225,8 +225,8 @@ map("n", "<leader>o", "<C-o>", { desc = "Jump backward" })
 map("n", "<leader>i", "<C-i>", { desc = "Jump forward" })
 
 -- --- File Tree Toggle (Neo-Tree) ---
-map("n", "<leader>fe", "<cmd>Neotree toggle<cr>", { desc = "Toggle Explorer" })
-map("n", "<leader>e", "<cmd>Neotree toggle<cr>", { desc = "Toggle Explorer" })
+map("n", "<leader>fe", "<cmd>Neotree toggle reveal<cr>", { desc = "Toggle Explorer" })
+map("n", "<leader>e", "<cmd>Neotree toggle reveal<cr>", { desc = "Toggle Explorer" })
 
 -- --- Diagnostics Mappings ---
 map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
