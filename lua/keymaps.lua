@@ -114,7 +114,6 @@ local function buf_delete()
   bd(bufnr, {})
 end
 
-map({ "n", "t" }, "<C-w>", buf_delete, { desc = "Close Buffer" })
 map("n", "<leader>bd", buf_delete, { desc = "Delete Buffer" })
 map("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
 
