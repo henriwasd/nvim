@@ -82,7 +82,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
 
     -- Atalhos de Navegação do LSP
-    map("n", "gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
+    map("n", "gd", function()
+      require("telescope.builtin").lsp_definitions()
+    end, { desc = "Go to Definition" })
     map("n", "gr", function()
       require("telescope.builtin").lsp_references()
     end, { desc = "References" })
