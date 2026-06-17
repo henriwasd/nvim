@@ -127,9 +127,6 @@ map({ "n", "t" }, "<C-S-~>", function()
   vim.cmd("startinsert")
 end, { desc = "New Split Terminal" })
 
--- --- Padrões VSCode ---
--- Salvar
-map({ "i", "n", "v", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save file" })
 -- Mover linhas (Alt + j/k)
 map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move Down" })
 map("n", "<A-k>", "<cmd>m .-2<cr>==", { desc = "Move Up" })
@@ -144,26 +141,6 @@ map({ "n", "v" }, "<C-a>", "ggVG", { desc = "Select all" })
 map("v", "<C-c>", '"+y', { desc = "Copy to clipboard" })
 map({ "n", "v" }, "<C-v>", '"+p', { desc = "Paste from clipboard" })
 map("i", "<C-v>", "<C-r>+", { desc = "Paste from clipboard" })
-
--- Desfazer / Refazer
-map("i", "<C-z>", "<C-o>u", { desc = "Undo" })
-map("n", "<C-z>", "u", { desc = "Undo" })
-map("i", "<C-y>", "<C-o><C-r>", { desc = "Redo" })
-map("n", "<C-y>", "<C-r>", { desc = "Redo" })
-
--- --- NAVEGAÇÃO DE ABAS (ALT + NÚMERO) ---
-for i = 1, 9 do
-  map("n", "<A-" .. i .. ">", function()
-    if package.loaded["bufferline"] then
-      require("bufferline").go_to(i, true)
-    end
-  end, { desc = "Go to buffer " .. i })
-end
-map("n", "<A-0>", function()
-  if package.loaded["bufferline"] then
-    vim.cmd("BufferLineGoToBuffer -1")
-  end
-end, { desc = "Go to last buffer" })
 
 -- --- NAVEGAÇÃO GLOBAL (SPLITS E BUFFERS) ---
 -- Mover entre janelas (Ctrl + hjkl)
@@ -227,7 +204,7 @@ map({ "n", "v" }, "<F1>", function()
   require("telescope.builtin").commands()
 end, { desc = "Command Palette" })
 
--- --- ZEN MODE / FOLDING ---
+-- --- FOLDING ---
 map("n", "<C-k>z", "za", { desc = "Toggle Fold" })
 
 -- --- JUMPLIST NAVEGATION ---
@@ -235,7 +212,6 @@ map("n", "<leader>o", "<C-o>", { desc = "Jump backward" })
 map("n", "<leader>i", "<C-i>", { desc = "Jump forward" })
 
 -- --- File Tree Toggle (Neo-Tree) ---
-map("n", "<leader>fe", "<cmd>Neotree toggle reveal<cr>", { desc = "Toggle Explorer" })
 map("n", "<leader>e", "<cmd>Neotree toggle reveal<cr>", { desc = "Toggle Explorer" })
 
 -- --- Diagnostics Mappings ---
