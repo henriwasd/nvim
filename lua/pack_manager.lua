@@ -39,6 +39,8 @@ M.plugins = {
 
   -- Git
   { repo = "lewis6991/gitsigns.nvim", name = "gitsigns.nvim" },
+  { repo = "NeogitOrg/neogit", name = "neogit" },
+  { repo = "sindrets/diffview.nvim", name = "diffview.nvim" },
 
   -- Utilities
   { repo = "echasnovski/mini.pairs", name = "mini.pairs" },

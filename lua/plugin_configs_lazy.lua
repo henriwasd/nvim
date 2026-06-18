@@ -37,6 +37,7 @@ local ok_telescope, telescope = pcall(require, "telescope")
 if ok_telescope then
   telescope.setup({
     defaults = {
+      path_display = { "truncate" },
       mappings = {
         i = {
           ["<C-j>"] = "move_selection_next",
@@ -130,6 +131,66 @@ if ok_mason_lsp and ok_lspconfig then
       return
     end
 
+    local opts = {
+      capabilities = capabilities,
+    }
+
+    if server_name == "lua_ls" then
+      opts.settings = {
+        Lua = {
+          diagnostics = {
+            globals = { "vim" },
+          },
+        },
+      }
+    elseif server_name == "vtsls" then
+      opts.settings = {
+        vtsls = {
+          autoUseWorkspaceTsdk = true,
+        },
+        typescript = {
+          format = {
+            enable = false,
+          },
+          watchOptions = {
+            excludeDirectories = { "**/node_modules", "**/dist", "**/build", "**/.git", "**/.next", "**/.svelte-kit" },
+          },
+        },
+        javascript = {
+          format = {
+            enable = false,
+          },
+          watchOptions = {
+            excludeDirectories = { "**/node_modules", "**/dist", "**/build", "**/.git", "**/.next", "**/.svelte-kit" },
+          },
+        },
+      }
+    elseif server_name == "biome" then
+      opts.root_dir = function(fname)
+        return vim.fs.root(fname, { "biome.json", "biome.jsonc" })
+      end
+    elseif server_name == "eslint" then
+      opts.root_dir = function(fname)
+        -- Se o projeto tem biome.json/biome.jsonc, desativa eslint
+        if vim.fs.root(fname, { "biome.json", "biome.jsonc" }) then
+          return nil
+        end
+        return vim.fs.root(fname, {
+          "eslint.config.js",
+          "eslint.config.mjs",
+          "eslint.config.cjs",
+          "eslint.config.ts",
+          "eslint.config.mts",
+          "eslint.config.cts",
+          ".eslintrc",
+          ".eslintrc.js",
+          ".eslintrc.json",
+          ".eslintrc.yaml",
+          ".eslintrc.yml",
+        })
+      end
+    end
+
     -- Suporte nativo para Neovim 0.11+ / 0.12+
     if vim.lsp.config and vim.lsp.enable then
       local ok_config, config = pcall(vim.lsp.config, server_name)
@@ -137,21 +198,6 @@ if ok_mason_lsp and ok_lspconfig then
         -- Não é um servidor LSP válido (ex: stylua, que é um formatador)
         return
       end
-
-      local opts = {
-        capabilities = capabilities,
-      }
-
-      if server_name == "lua_ls" then
-        opts.settings = {
-          Lua = {
-            diagnostics = {
-              globals = { "vim" },
-            },
-          },
-        }
-      end
-
       vim.lsp.config(server_name, opts)
       vim.lsp.enable(server_name)
     else
@@ -163,27 +209,24 @@ if ok_mason_lsp and ok_lspconfig then
       if not ok_server or not lspconfig[server_name] then
         return
       end
-
-      local opts = {
-        capabilities = capabilities,
-      }
-
-      if server_name == "lua_ls" then
-        opts.settings = {
-          Lua = {
-            diagnostics = {
-              globals = { "vim" },
-            },
-          },
-        }
-      end
-
       lspconfig[server_name].setup(opts)
     end
   end
 
-  -- Configura os servidores já instalados
-  for _, server in ipairs(mason_lsp.get_installed_servers()) do
+  -- Configura os servidores de forma estática para evitar I/O de disco lento no startup
+  local installed_servers = {
+    "lua_ls",
+    "vtsls",
+    "biome",
+    "tailwindcss",
+    "eslint",
+    "jsonls",
+    "cssls",
+    "bashls",
+    "marksman",
+    "taplo",
+  }
+  for _, server in ipairs(installed_servers) do
     setup_server(server)
   end
 
@@ -210,12 +253,28 @@ if ok_conform then
   conform.setup({
     formatters_by_ft = {
       lua = { "stylua" },
-      javascript = { "prettierd", "prettier", stop_after_first = true },
-      typescript = { "prettierd", "prettier", stop_after_first = true },
+      javascript = { "biome-check", "biome", "prettierd", "prettier", stop_after_first = true },
+      typescript = { "biome-check", "biome", "prettierd", "prettier", stop_after_first = true },
+      javascriptreact = { "biome-check", "biome", "prettierd", "prettier", stop_after_first = true },
+      typescriptreact = { "biome-check", "biome", "prettierd", "prettier", stop_after_first = true },
+      json = { "biome-check", "biome", stop_after_first = true },
+      jsonc = { "biome-check", "biome", stop_after_first = true },
       dart = { "dart_format" },
     },
+    formatters = {
+      ["biome-check"] = {
+        condition = function(self, ctx)
+          return vim.fs.root(ctx.filename, { "biome.json", "biome.jsonc" }) ~= nil
+        end,
+      },
+      biome = {
+        condition = function(self, ctx)
+          return vim.fs.root(ctx.filename, { "biome.json", "biome.jsonc" }) ~= nil
+        end,
+      },
+    },
     format_on_save = {
-      timeout_ms = 500,
+      timeout_ms = 2000,
       lsp_fallback = true,
     },
   })
@@ -361,6 +420,27 @@ if ok_hipatterns then
   hipatterns.setup({
     highlighters = {
       hex_color = hipatterns.gen_highlighter.hex_color(),
+    },
+  })
+end
+
+-- 18. Git Diff and History visualizer (Diffview)
+local ok_diffview, diffview = pcall(require, "diffview")
+if ok_diffview then
+  diffview.setup({
+    enhanced_diff_hl = true,
+    use_icons = true,
+  })
+end
+
+-- 19. Git interface (Neogit)
+local ok_neogit, neogit = pcall(require, "neogit")
+if ok_neogit then
+  neogit.setup({
+    disable_commit_confirmation = true,
+    integrations = {
+      diffview = true,
+      telescope = true,
     },
   })
 end

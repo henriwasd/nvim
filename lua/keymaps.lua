@@ -137,6 +137,20 @@ map("v", "<A-k>", ":m '<-2<cr>gv=gv", { desc = "Move Up", silent = true })
 
 -- Selecionar tudo
 map({ "n", "v" }, "<C-a>", "ggVG", { desc = "Select all" })
+-- Salvar arquivo (Ctrl + s)
+map({ "n", "i", "x" }, "<C-s>", "<cmd>w<cr>", { desc = "Save File" })
+
+-- Formatar buffer / seleção (sem salvar)
+local function format_buffer()
+  local ok_conform, conform = pcall(require, "conform")
+  if ok_conform then
+    conform.format({ bufnr = 0, lsp_fallback = true })
+  else
+    vim.lsp.buf.format({ async = true })
+  end
+end
+map({ "n", "v" }, "<leader>cf", format_buffer, { desc = "Format Document / Selection" })
+map({ "n", "v" }, "<A-f>", format_buffer, { desc = "Format Document / Selection" })
 -- Copiar, colar e cortar
 map("v", "<C-c>", '"+y', { desc = "Copy to clipboard" })
 map({ "n", "v" }, "<C-v>", '"+p', { desc = "Paste from clipboard" })
@@ -153,7 +167,12 @@ map({ "n", "v", "t" }, "<C-l>", "<cmd>wincmd l<cr>", { desc = "Go to right windo
 map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
 map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 
--- Atalhos de compatibilidade (Ctrl-Shift-Alt Setas)
+-- Mover entre janelas (Ctrl + Alt + Setas / Ctrl + Shift + Alt + Setas)
+map({ "n", "v", "t" }, "<C-M-Left>", "<cmd>wincmd h<cr>", { desc = "Go to left window" })
+map({ "n", "v", "t" }, "<C-M-Right>", "<cmd>wincmd l<cr>", { desc = "Go to right window" })
+map({ "n", "v", "t" }, "<C-M-Up>", "<cmd>wincmd k<cr>", { desc = "Go to upper window" })
+map({ "n", "v", "t" }, "<C-M-Down>", "<cmd>wincmd j<cr>", { desc = "Go to lower window" })
+
 map({ "n", "v", "t" }, "<C-S-M-Left>", "<cmd>wincmd h<cr>", { desc = "Go to left window" })
 map({ "n", "v", "t" }, "<C-S-M-Right>", "<cmd>wincmd l<cr>", { desc = "Go to right window" })
 map({ "n", "v", "t" }, "<C-S-M-Up>", "<cmd>wincmd k<cr>", { desc = "Go to upper window" })
@@ -219,3 +238,52 @@ map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
 map("n", "<leader>xx", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
 map("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous Diagnostic" })
 map("n", "]d", vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
+
+-- --- GIT INTEGRATIONS KEYMAPS ---
+-- Neogit (Full Git Client)
+map("n", "<leader>gs", "<cmd>Neogit<cr>", { desc = "Git Status (Neogit)" })
+map("n", "<leader>gc", "<cmd>Neogit commit<cr>", { desc = "Git Commit" })
+map("n", "<leader>gp", "<cmd>Neogit pull<cr>", { desc = "Git Pull" })
+map("n", "<leader>gP", "<cmd>Neogit push<cr>", { desc = "Git Push" })
+
+-- Diffview (Visual Diffs & History)
+map("n", "<leader>gd", "<cmd>DiffviewOpen<cr>", { desc = "Git Diff (Diffview)" })
+map("n", "<leader>gD", "<cmd>DiffviewClose<cr>", { desc = "Close Git Diff" })
+map("n", "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", { desc = "Git File History" })
+map("n", "<leader>gH", "<cmd>DiffviewFileHistory<cr>", { desc = "Git Project History" })
+
+-- Telescope Git Picker
+map("n", "<leader>gb", function()
+  require("telescope.builtin").git_branches()
+end, { desc = "Git Branches" })
+map("n", "<leader>gl", function()
+  require("telescope.builtin").git_commits()
+end, { desc = "Git Commits Log" })
+
+-- Gitsigns (Inline Git indicators & hunk actions)
+map("n", "]h", function()
+  if vim.wo.diff then return "]h" end
+  vim.schedule(function()
+    require("gitsigns").next_hunk()
+  end)
+  return "<Ignore>"
+end, { expr = true, desc = "Next Git Hunk" })
+
+map("n", "[h", function()
+  if vim.wo.diff then return "[h" end
+  vim.schedule(function()
+    require("gitsigns").prev_hunk()
+  end)
+  return "<Ignore>"
+end, { expr = true, desc = "Previous Git Hunk" })
+
+map("n", "<leader>ghs", "<cmd>Gitsigns stage_hunk<cr>", { desc = "Stage Git Hunk" })
+map("n", "<leader>ghr", "<cmd>Gitsigns reset_hunk<cr>", { desc = "Reset Git Hunk" })
+map("v", "<leader>ghs", function()
+  require("gitsigns").stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+end, { desc = "Stage Git Hunk (Visual)" })
+map("v", "<leader>ghr", function()
+  require("gitsigns").reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+end, { desc = "Reset Git Hunk (Visual)" })
+map("n", "<leader>ghp", "<cmd>Gitsigns preview_hunk<cr>", { desc = "Preview Git Hunk" })
+map("n", "<leader>gbl", "<cmd>Gitsigns toggle_current_line_blame<cr>", { desc = "Toggle Line Blame" })

@@ -20,6 +20,14 @@ if ok_lualine then
       component_separators = "|",
       section_separators = "",
     },
+    sections = {
+      lualine_c = {
+        {
+          "filename",
+          path = 1, -- 0: Just filename, 1: Relative path, 2: Absolute path, 3: Absolute path with tilde
+        },
+      },
+    },
   })
 end
 
