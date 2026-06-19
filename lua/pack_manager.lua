@@ -43,6 +43,8 @@ M.plugins = {
   { repo = "sindrets/diffview.nvim", name = "diffview.nvim" },
 
   -- Utilities
+  { repo = "andymass/vim-matchup", name = "vim-matchup" },
+  { repo = "windwp/nvim-ts-autotag", name = "nvim-ts-autotag" },
   { repo = "echasnovski/mini.pairs", name = "mini.pairs" },
   { repo = "echasnovski/mini.surround", name = "mini.surround" },
   { repo = "mg979/vim-visual-multi", name = "vim-visual-multi" },

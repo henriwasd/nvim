@@ -235,9 +235,8 @@ map("n", "<leader>e", "<cmd>Neotree toggle reveal<cr>", { desc = "Toggle Explore
 
 -- --- Diagnostics Mappings ---
 map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
-map("n", "<leader>xx", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
-map("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous Diagnostic" })
-map("n", "]d", vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
+map("n", "pd", vim.diagnostic.goto_prev, { desc = "Previous Diagnostic" })
+map("n", "nd", vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
 
 -- --- GIT INTEGRATIONS KEYMAPS ---
 -- Neogit (Full Git Client)
@@ -287,3 +286,26 @@ map("v", "<leader>ghr", function()
 end, { desc = "Reset Git Hunk (Visual)" })
 map("n", "<leader>ghp", "<cmd>Gitsigns preview_hunk<cr>", { desc = "Preview Git Hunk" })
 map("n", "<leader>gbl", "<cmd>Gitsigns toggle_current_line_blame<cr>", { desc = "Toggle Line Blame" })
+
+-- --- WINDOW MANAGEMENT (<leader>w) ---
+map("n", "<leader>ww", "<cmd>wincmd w<cr>", { desc = "Switch to Other Window" })
+map("n", "<leader>wd", "<cmd>wincmd c<cr>", { desc = "Close Window" })
+map("n", "<leader>wo", "<cmd>wincmd o<cr>", { desc = "Maximize / Only Window" })
+map("n", "<leader>ws", "<cmd>split<cr>", { desc = "Split Horizontally" })
+map("n", "<leader>w-", "<cmd>split<cr>", { desc = "Split Horizontally" })
+map("n", "<leader>wv", "<cmd>vsplit<cr>", { desc = "Split Vertically" })
+map("n", "<leader>w|", "<cmd>vsplit<cr>", { desc = "Split Vertically" })
+map("n", "<leader>w=", "<cmd>wincmd =<cr>", { desc = "Equalize Window Sizes" })
+map("n", "<leader>wt", "<cmd>wincmd T<cr>", { desc = "Move Window to New Tab" })
+
+-- Resize window
+map("n", "<leader>w+", "<cmd>resize +5<cr>", { desc = "Increase Height" })
+map("n", "<leader>w_", "<cmd>resize -5<cr>", { desc = "Decrease Height" })
+map("n", "<leader>w>", "<cmd>vertical resize +5<cr>", { desc = "Increase Width" })
+map("n", "<leader>w<", "<cmd>vertical resize -5<cr>", { desc = "Decrease Width" })
+
+-- Move window position
+map("n", "<leader>wH", "<cmd>wincmd H<cr>", { desc = "Move Window to Left" })
+map("n", "<leader>wJ", "<cmd>wincmd J<cr>", { desc = "Move Window to Bottom" })
+map("n", "<leader>wK", "<cmd>wincmd K<cr>", { desc = "Move Window to Top" })
+map("n", "<leader>wL", "<cmd>wincmd L<cr>", { desc = "Move Window to Right" })

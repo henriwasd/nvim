@@ -49,14 +49,20 @@ if ok_telescope then
 end
 
 -- 6. Syntax Highlighting (Treesitter)
+vim.g.matchup_matchparen_deferred = 1
+vim.g.matchup_matchparen_offscreen = { method = "popup" }
+
 local ok_ts, ts = pcall(require, "nvim-treesitter.configs")
 if ok_ts then
   ts.setup({
-    ensure_installed = { "lua", "vim", "vimdoc", "markdown", "markdown_inline", "javascript", "typescript", "dart" },
+    ensure_installed = { "lua", "vim", "vimdoc", "markdown", "markdown_inline", "javascript", "typescript", "dart", "html", "tsx" },
     highlight = {
       enable = true,
     },
     indent = {
+      enable = true,
+    },
+    matchup = {
       enable = true,
     },
   })
@@ -292,6 +298,18 @@ if ok_pairs then
   pairs.setup()
 end
 
+-- 10.5 HTML Auto-tag & Rename (nvim-ts-autotag)
+local ok_autotag, autotag = pcall(require, "nvim-ts-autotag")
+if ok_autotag then
+  autotag.setup({
+    opts = {
+      enable_close = true,
+      enable_rename = true,
+      enable_close_on_slash = false,
+    },
+  })
+end
+
 -- 11. Surrounding text utility (Mini.surround)
 local ok_surround, surround = pcall(require, "mini.surround")
 if ok_surround then
@@ -405,6 +423,9 @@ local ok_wk, wk = pcall(require, "which-key")
 if ok_wk then
   wk.setup({
     preset = "classic",
+  })
+  wk.add({
+    { "<leader>w", group = "Window" },
   })
 end
 
