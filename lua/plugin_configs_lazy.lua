@@ -426,6 +426,7 @@ if ok_wk then
   })
   wk.add({
     { "<leader>w", group = "Window" },
+    { "<leader>b", group = "Buffer" },
   })
 end
 

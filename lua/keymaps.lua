@@ -116,6 +116,13 @@ end
 
 map("n", "<leader>bd", buf_delete, { desc = "Delete Buffer" })
 map("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
+map("n", "<leader>bo", "<cmd>BufferLineCloseOthers<cr>", { desc = "Delete Other Buffers" })
+map("n", "<leader>bp", "<cmd>BufferLineTogglePin<cr>", { desc = "Toggle Pin Buffer" })
+map("n", "<leader>bl", function() require("telescope.builtin").buffers() end, { desc = "List Buffers" })
+map("n", "<leader>bh", "<cmd>BufferLineCloseLeft<cr>", { desc = "Close Buffers to Left" })
+map("n", "<leader>br", "<cmd>BufferLineCloseRight<cr>", { desc = "Close Buffers to Right" })
+map("n", "<leader>b[", "<cmd>BufferLineMovePrev<cr>", { desc = "Move Buffer Left" })
+map("n", "<leader>b]", "<cmd>BufferLineMoveNext<cr>", { desc = "Move Buffer Right" })
 
 -- Criar NOVO terminal em um split abaixo
 map({ "n", "t" }, "<C-S-`>", function()
