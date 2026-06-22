@@ -199,12 +199,53 @@ end, { desc = "Recent Files" })
 map("n", "<leader>fb", function()
   require("telescope.builtin").buffers()
 end, { desc = "Buffers" })
+-- Helper function to get visual selection text safely
+local function get_visual_selection()
+  local old_reg = vim.fn.getreg("v")
+  local old_regtype = vim.fn.getregtype("v")
+
+  vim.cmd('noau normal! "vy')
+  local text = vim.fn.getreg("v")
+
+  vim.fn.setreg("v", old_reg, old_regtype)
+
+  -- Clean up text (remove newlines and carriage returns)
+  text = string.gsub(text, "\n", "")
+  text = string.gsub(text, "\r", "")
+  return text
+end
+
 map("n", "<leader>sg", function()
   require("telescope.builtin").live_grep()
 end, { desc = "Grep (root dir)" })
 map("n", "<leader>/", function()
   require("telescope.builtin").live_grep()
 end, { desc = "Grep (root dir)" })
+
+-- Search in current file (Normal mode)
+map("n", "<leader>ss", function()
+  require("telescope.builtin").current_buffer_fuzzy_find()
+end, { desc = "Search in Current File" })
+map("n", "<leader>sf", function()
+  require("telescope.builtin").current_buffer_fuzzy_find()
+end, { desc = "Search in Current File" })
+
+-- Search visual selection in project (Grep)
+map("v", "<leader>sg", function()
+  local text = get_visual_selection()
+  require("telescope.builtin").grep_string({ search = text })
+end, { desc = "Search Selection in Project" })
+
+-- Search visual selection in current file
+map("v", "<leader>ss", function()
+  local text = get_visual_selection()
+  require("telescope.builtin").current_buffer_fuzzy_find({ default_text = text })
+end, { desc = "Search Selection in File" })
+map("v", "<leader>sf", function()
+  local text = get_visual_selection()
+  require("telescope.builtin").current_buffer_fuzzy_find({ default_text = text })
+end, { desc = "Search Selection in File" })
+
 map("n", "<leader>sh", function()
   require("telescope.builtin").help_tags()
 end, { desc = "Help Tags" })
