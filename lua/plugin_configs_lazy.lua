@@ -2,35 +2,6 @@
 -- LAZY PLUGIN CONFIGURATIONS (Loaded via vim.schedule)
 -- =============================================================================
 
--- 4. File Explorer (Neo-tree)
-local ok_neotree, neotree = pcall(require, "neo-tree")
-if ok_neotree then
-  neotree.setup({
-    window = {
-      mappings = {
-        ["h"] = "close_node",
-        ["l"] = "open",
-      },
-    },
-    filesystem = {
-      follow_current_file = {
-        enabled = true,
-        leave_dirs_open = false,
-      },
-      filtered_items = {
-        visible = true,
-        hide_dotfiles = false,
-        hide_hidden = false,
-        hide_by_name = {
-          "node_modules",
-          ".git",
-          "*.DS_Store",
-          "thumbs.db",
-        },
-      },
-    },
-  })
-end
 
 -- 5. Fuzzy Finder (Telescope)
 local ok_telescope, telescope = pcall(require, "telescope")
@@ -130,6 +101,11 @@ if ok_mason_lsp and ok_lspconfig then
   local ok_cmp_lsp, cmp_lsp = pcall(require, "cmp_nvim_lsp")
   if ok_cmp_lsp then
     capabilities = cmp_lsp.default_capabilities(capabilities)
+  end
+  local ok_lsp_file_ops, lsp_file_ops = pcall(require, "lsp-file-operations")
+  if ok_lsp_file_ops then
+    lsp_file_ops.setup()
+    capabilities = vim.tbl_deep_extend("force", capabilities, lsp_file_ops.default_capabilities())
   end
 
   local function setup_server(server_name)
@@ -466,3 +442,45 @@ if ok_neogit then
     },
   })
 end
+
+-- 20. Oil (Edit filesystem directories like a buffer)
+local ok_oil, oil = pcall(require, "oil")
+if ok_oil then
+  oil.setup({
+    default_file_explorer = true,
+    columns = {
+      "icon",
+    },
+    keymaps = {
+      ["g?"] = "actions.show_help",
+      ["<CR>"] = "actions.select",
+      ["<C-s>"] = "actions.select_vsplit",
+      ["<C-h>"] = "actions.select_split",
+      ["<C-t>"] = "actions.select_tab",
+      ["<C-p>"] = "actions.preview",
+      ["<C-c>"] = "actions.close",
+      ["<C-l>"] = "actions.refresh",
+      ["-"] = "actions.parent",
+      ["_"] = "actions.open_cwd",
+      ["`"] = "actions.cd",
+      ["~"] = "actions.tcd",
+      ["gs"] = "actions.change_sort",
+      ["gx"] = "actions.open_external",
+      ["g."] = "actions.toggle_hidden",
+      ["g\\"] = "actions.toggle_trash",
+    },
+  })
+end
+
+-- 21. Grug-far (Project search and replace)
+local ok_grug, grug = pcall(require, "grug-far")
+if ok_grug then
+  grug.setup()
+end
+
+-- 22. Inc-rename (Incremental symbol rename preview)
+local ok_inc_rename, inc_rename = pcall(require, "inc_rename")
+if ok_inc_rename then
+  inc_rename.setup()
+end
+

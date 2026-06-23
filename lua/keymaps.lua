@@ -274,12 +274,29 @@ end, { desc = "Command Palette" })
 -- --- FOLDING ---
 map("n", "<C-k>z", "za", { desc = "Toggle Fold" })
 
--- --- JUMPLIST NAVEGATION ---
-map("n", "<leader>o", "<C-o>", { desc = "Jump backward" })
-map("n", "<leader>i", "<C-i>", { desc = "Jump forward" })
+-- --- File Explorer (Oil.nvim) ---
+map("n", "<leader>e", "<cmd>Oil<cr>", { desc = "Open parent directory with Oil" })
+map("n", "-", "<cmd>Oil<cr>", { desc = "Open parent directory with Oil" })
 
--- --- File Tree Toggle (Neo-Tree) ---
-map("n", "<leader>e", "<cmd>Neotree toggle reveal<cr>", { desc = "Toggle Explorer" })
+-- --- Search & Replace (Grug-far) ---
+map("n", "<leader>sr", function()
+  local ok, grug = pcall(require, "grug-far")
+  if ok then
+    grug.open({ transient = true })
+  else
+    vim.notify("Plugin grug-far.nvim não encontrado", vim.log.levels.ERROR)
+  end
+end, { desc = "Search and Replace (Grug-far)" })
+
+map("v", "<leader>sr", function()
+  local ok, grug = pcall(require, "grug-far")
+  if ok then
+    grug.with_visual_selection({ transient = true })
+  else
+    vim.notify("Plugin grug-far.nvim não encontrado", vim.log.levels.ERROR)
+  end
+end, { desc = "Search and Replace Selection (Grug-far)" })
+
 
 -- --- Diagnostics Mappings ---
 map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
@@ -351,6 +368,17 @@ map("n", "<leader>w+", "<cmd>resize +5<cr>", { desc = "Increase Height" })
 map("n", "<leader>w_", "<cmd>resize -5<cr>", { desc = "Decrease Height" })
 map("n", "<leader>w>", "<cmd>vertical resize +5<cr>", { desc = "Increase Width" })
 map("n", "<leader>w<", "<cmd>vertical resize -5<cr>", { desc = "Decrease Width" })
+
+-- Resize window with Alt + Shift + Setas / HJKL
+map("n", "<A-S-Up>", "<cmd>resize +2<cr>", { desc = "Increase Height" })
+map("n", "<A-S-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Height" })
+map("n", "<A-S-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Width" })
+map("n", "<A-S-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Width" })
+
+map("n", "<A-K>", "<cmd>resize +2<cr>", { desc = "Increase Height" })
+map("n", "<A-J>", "<cmd>resize -2<cr>", { desc = "Decrease Height" })
+map("n", "<A-H>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Width" })
+map("n", "<A-L>", "<cmd>vertical resize +2<cr>", { desc = "Increase Width" })
 
 -- Move window position
 map("n", "<leader>wH", "<cmd>wincmd H<cr>", { desc = "Move Window to Left" })

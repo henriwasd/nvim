@@ -17,8 +17,11 @@ M.plugins = {
   { repo = "nvim-lua/plenary.nvim", name = "plenary.nvim" },
   { repo = "MunifTanjim/nui.nvim", name = "nui.nvim" },
 
-  -- File Explorer
-  { repo = "nvim-neo-tree/neo-tree.nvim", name = "neo-tree.nvim" },
+  -- File Explorer & Refactoring
+  { repo = "stevearc/oil.nvim", name = "oil.nvim" },
+  { repo = "MagicDuck/grug-far.nvim", name = "grug-far.nvim" },
+  { repo = "antosha417/nvim-lsp-file-operations", name = "nvim-lsp-file-operations" },
+  { repo = "smjonas/inc-rename.nvim", name = "inc-rename.nvim" },
 
   -- Fuzzy Finder
   { repo = "nvim-telescope/telescope.nvim", name = "telescope.nvim" },

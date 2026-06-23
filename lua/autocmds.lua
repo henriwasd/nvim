@@ -178,8 +178,18 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "gK", vim.lsp.buf.signature_help, { desc = "Signature Help" })
 
     -- Ações de Código do LSP
-    map("n", "<leader>cr", vim.lsp.buf.rename, { desc = "Rename Symbol" })
-    map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename Symbol" })
+    local ok_inc_rename, _ = pcall(require, "inc_rename")
+    if ok_inc_rename then
+      map("n", "<leader>cr", function()
+        return ":IncRename " .. vim.fn.expand("<cword>")
+      end, { expr = true, desc = "Rename Symbol (Incremental)" })
+      map("n", "<leader>rn", function()
+        return ":IncRename " .. vim.fn.expand("<cword>")
+      end, { expr = true, desc = "Rename Symbol (Incremental)" })
+    else
+      map("n", "<leader>cr", vim.lsp.buf.rename, { desc = "Rename Symbol" })
+      map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename Symbol" })
+    end
     map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
     map("v", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action (Visual)" })
 
