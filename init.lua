@@ -17,7 +17,5 @@ require("autocmds")
 -- Load plugin configurations
 require("plugin_configs")
 
--- Defer non-critical plugin configurations to speed up startup time
-vim.schedule(function()
-  require("plugin_configs_lazy")
-end)
+-- Load remaining plugin configurations (LSP, Autocomplete, etc.)
+require("plugin_configs_lazy")

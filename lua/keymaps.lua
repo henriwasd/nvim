@@ -78,7 +78,6 @@ map({ "n", "t" }, "<C-/>", toggle_terminal, { desc = "Toggle Terminal" })
 map({ "n", "t" }, "<C-_>", toggle_terminal, { desc = "Toggle Terminal" })
 map({ "n", "t" }, "<C-~>", toggle_terminal, { desc = "Toggle Terminal" })
 map({ "n", "t" }, "<C-`>", toggle_terminal, { desc = "Toggle Terminal" })
-map({ "n", "t" }, "<C-@>", toggle_terminal, { desc = "Toggle Terminal (Fallback)" })
 map({ "n", "t" }, "<C-\\>", toggle_terminal, { desc = "Toggle Terminal (Fallback)" })
 
 -- Terminal mode escapes

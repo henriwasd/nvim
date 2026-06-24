@@ -2,7 +2,6 @@
 local opt = vim.opt
 
 opt.number = true -- Show line numbers
-opt.relativenumber = false -- Relative line numbers
 opt.splitbelow = true -- Put new windows below current
 opt.splitright = true -- Put new windows right of current
 opt.wrap = false -- Disable line wrap
@@ -12,14 +11,12 @@ opt.tabstop = 2 -- Tab 2 spaces
 opt.smartindent = true -- Smart indenting
 opt.ignorecase = true -- Ignore case in search
 opt.smartcase = true -- Smart case search
-opt.mouse = "a" -- Enable mouse support
 opt.clipboard = "unnamedplus" -- Sync with system clipboard
 opt.termguicolors = true -- Enable 24-bit RGB colors
 opt.signcolumn = "yes" -- Always show the sign column
 opt.updatetime = 250 -- Faster completion and diagnostic updates
 opt.timeoutlen = 300 -- Time to wait for a mapped sequence to complete
 opt.undofile = true -- Save undo history
-opt.autoread = true -- Automatically reload files modified externally
 opt.scrolloff = 8 -- Minimum lines to keep above/below cursor
 opt.sidescrolloff = 8 -- Minimum columns to keep left/right
 
