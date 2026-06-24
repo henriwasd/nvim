@@ -37,6 +37,7 @@ M.plugins = {
   { repo = "hrsh7th/cmp-nvim-lsp", name = "cmp-nvim-lsp" },
   { repo = "hrsh7th/cmp-buffer", name = "cmp-buffer" },
   { repo = "hrsh7th/cmp-path", name = "cmp-path" },
+  { repo = "hrsh7th/cmp-nvim-lsp-signature-help", name = "cmp-nvim-lsp-signature-help" },
   { repo = "L3MON4D3/LuaSnip", name = "LuaSnip" },
   { repo = "saadparwaiz1/cmp_luasnip", name = "cmp_luasnip" },
 
