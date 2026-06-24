@@ -101,15 +101,38 @@ local function buf_delete()
     end
   end
 
-  -- Swap buffer first to keep window layout
-  local windows = vim.fn.getbufinfo(bufnr)[1].windows
-  for _, win in ipairs(windows) do
-    vim.api.nvim_win_call(win, function()
-      vim.cmd("bnext")
-      if vim.api.nvim_get_current_buf() == bufnr then
-        vim.cmd("enew")
+  -- Get listed buffers
+  local buffers = vim.tbl_filter(function(buf)
+    return vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted
+  end, vim.api.nvim_list_bufs())
+
+  -- Find alternative buffer
+  local target_buf = nil
+  if #buffers > 1 then
+    for i, buf in ipairs(buffers) do
+      if buf == bufnr then
+        if i > 1 then
+          target_buf = buffers[i - 1]
+        else
+          target_buf = buffers[i + 1]
+        end
+        break
       end
-    end)
+    end
+  end
+
+  -- If no other buffer exists, create a new empty one
+  if not target_buf then
+    target_buf = vim.api.nvim_create_buf(true, false)
+  end
+
+  -- Swap buffer first to keep window layout
+  local bufinfo = vim.fn.getbufinfo(bufnr)
+  local windows = (bufinfo and bufinfo[1] and bufinfo[1].windows) or {}
+  for _, win in ipairs(windows) do
+    if vim.api.nvim_win_is_valid(win) then
+      vim.api.nvim_win_set_buf(win, target_buf)
+    end
   end
   bd(bufnr, {})
 end
