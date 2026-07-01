@@ -361,7 +361,22 @@ if ok_oil then
     columns = {
       "icon",
     },
+    win_options = {
+      signcolumn = "yes:2",
+    },
   })
+
+  -- Git status integration for oil.nvim
+  local ok_oil_git, oil_git = pcall(require, "oil-git-status")
+  if ok_oil_git then
+    oil_git.setup()
+  end
+
+  -- LSP diagnostics integration for oil.nvim
+  local ok_oil_lsp, oil_lsp = pcall(require, "oil-lsp-diagnostics")
+  if ok_oil_lsp then
+    oil_lsp.setup()
+  end
 end
 
 -- 21. Grug-far (Project search and replace)

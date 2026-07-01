@@ -6,34 +6,34 @@
 --     local ft = vim.bo[args.buf].filetype
 --     local ignore_fts =
 --       { "lazy", "mason", "TelescopePrompt", "neo-tree", "Trouble", "dashboard", "", "text", "markdown" }
--- 
+--
 --     if vim.tbl_contains(ignore_fts, ft) then
 --       return
 --     end
--- 
+--
 --     vim.schedule(function()
 --       if not vim.api.nvim_buf_is_valid(args.buf) then
 --         return
 --       end
--- 
+--
 --       -- Verifica se há LSPs ativos
 --       local get_clients = vim.lsp.get_clients or vim.lsp.get_active_clients
 --       local clients = get_clients({ bufnr = args.buf })
 --       if #clients > 0 then
 --         return
 --       end
--- 
+--
 --       -- Carregamento tardio e seguro
 --       local ok_lsp, lspconfig = pcall(require, "lspconfig")
 --       local ok_mason, mason_mapping = pcall(require, "mason-lspconfig.mapping")
 --       if not ok_lsp or not ok_mason then
 --         return
 --       end
--- 
+--
 --       local configs = require("lspconfig.configs")
 --       local lsp_to_mason = mason_mapping.get_lspconfig_to_mason_map()
 --       local suggestions = {}
--- 
+--
 --       for server_name, config in pairs(configs) do
 --         local def = config.default_config
 --         if def and def.filetypes and vim.tbl_contains(def.filetypes, ft) then
@@ -43,7 +43,7 @@
 --           end
 --         end
 --       end
--- 
+--
 --       if #suggestions > 0 then
 --         -- Filtra repetidos
 --         local unique = {}
@@ -54,7 +54,7 @@
 --             hash[v] = true
 --           end
 --         end
--- 
+--
 --         vim.notify(
 --           string.format(
 --             "Nenhum LSP ativo para '%s'.\nSugestões para instalar via :Mason:\n- %s",
@@ -96,8 +96,25 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
     -- Atalhos de Navegação do LSP (Deduplicados e formatados)
     map("n", "gd", function()
+      local get_clients = vim.lsp.get_clients or vim.lsp.get_active_clients
+      local clients = get_clients({ bufnr = 0 })
+      local has_definition_support = false
+      for _, c in ipairs(clients) do
+        if c.initialized and c.supports_method("textDocument/definition") then
+          has_definition_support = true
+          break
+        end
+      end
+      if not has_definition_support then
+        local prev_tagfunc = vim.bo.tagfunc
+        vim.bo.tagfunc = ""
+        vim.cmd("normal! gd")
+        vim.bo.tagfunc = prev_tagfunc
+        return
+      end
+
       local params = vim.lsp.util.make_position_params()
-      vim.lsp.buf_request(0, "textDocument/definition", params, function(err, result, ctx, config)
+      vim.lsp.buf_request(0, "textDocument/definition", params, function(err, result)
         if err or not result or vim.tbl_isempty(result) then
           vim.notify("Nenhuma definição encontrada", vim.log.levels.INFO, { title = "LSP" })
           return
@@ -136,7 +153,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
             local uri = loc.uri or loc.targetUri
             local range = loc.range or loc.targetSelectionRange
             local filename = vim.uri_to_fname(uri)
-            
+
             -- Tenta ler a linha correspondente para mostrar no Telescope
             local line_text = ""
             local file = io.open(filename, "r")
@@ -192,7 +209,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
     map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
     map("v", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action (Visual)" })
-
   end,
 })
 
@@ -271,26 +287,5 @@ vim.api.nvim_create_autocmd("BufWritePre", {
         end
       end
     end
-  end,
-})
-
--- --- AUTO-RELOAD DE ARQUIVOS ALTERADOS NO DISCO (Autoread/Checktime) ---
-local autoreload_group = vim.api.nvim_create_augroup("autoreload_on_change", { clear = true })
-
--- Verifica alterações no disco ao focar, trocar buffer ou inatividade
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
-  group = autoreload_group,
-  callback = function()
-    if vim.fn.mode() ~= "c" and vim.o.buftype ~= "nofile" then
-      vim.cmd("checktime")
-    end
-  end,
-})
-
--- Notificação amigável quando o arquivo é recarregado
-vim.api.nvim_create_autocmd("FileChangedShellPost", {
-  group = autoreload_group,
-  callback = function()
-    vim.notify("Arquivo alterado no disco. Buffer recarregado automaticamente.", vim.log.levels.WARN, { title = "Autoread" })
   end,
 })

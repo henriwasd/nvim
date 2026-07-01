@@ -19,6 +19,8 @@ M.plugins = {
 
   -- File Explorer & Refactoring
   { repo = "stevearc/oil.nvim", name = "oil.nvim" },
+  { repo = "refractalize/oil-git-status.nvim", name = "oil-git-status.nvim" },
+  { repo = "JezerM/oil-lsp-diagnostics.nvim", name = "oil-lsp-diagnostics.nvim" },
   { repo = "MagicDuck/grug-far.nvim", name = "grug-far.nvim" },
   { repo = "antosha417/nvim-lsp-file-operations", name = "nvim-lsp-file-operations" },
   { repo = "smjonas/inc-rename.nvim", name = "inc-rename.nvim" },
