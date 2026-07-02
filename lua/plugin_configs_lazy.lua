@@ -390,3 +390,19 @@ local ok_inc_rename, inc_rename = pcall(require, "inc_rename")
 if ok_inc_rename then
   inc_rename.setup()
 end
+
+-- 23. Inline Diagnostics (tiny-inline-diagnostic)
+local ok_inline_diag, inline_diag = pcall(require, "tiny-inline-diagnostic")
+if ok_inline_diag then
+  -- Disable default virtual text to prevent duplication
+  vim.diagnostic.config({ virtual_text = false })
+
+  inline_diag.setup({
+    preset = "modern", -- Options: 'classic', 'modern', 'cheap', 'ghost', 'none'
+    options = {
+      throttle = 20, -- Throttle time in ms
+      softwrap = 15,
+      multiple_diag_under_cursor = true,
+    },
+  })
+end

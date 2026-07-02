@@ -73,6 +73,9 @@ M.plugins = {
 
   -- Color render
   { repo = "echasnovski/mini.hipatterns", name = "mini.hipatterns" },
+
+  -- Inline Diagnostics
+  { repo = "rachartier/tiny-inline-diagnostic.nvim", name = "tiny-inline-diagnostic.nvim" },
 }
 
 function M.bootstrap()
