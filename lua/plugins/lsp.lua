@@ -34,6 +34,15 @@ if ok_mason_lsp and ok_lspconfig then
           diagnostics = {
             globals = { "vim" },
           },
+          workspace = {
+            checkThirdParty = false, -- Disable third-party library prompts and downloads (saves network/CPU)
+            library = {
+              vim.env.VIMRUNTIME,   -- Only scan Neovim runtime files
+            },
+          },
+          telemetry = {
+            enable = false, -- Disable telemetry network calls
+          },
         },
       },
     })

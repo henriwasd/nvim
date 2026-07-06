@@ -3,6 +3,11 @@ local ok_cmp, cmp = pcall(require, "cmp")
 local ok_luasnip, luasnip = pcall(require, "luasnip")
 if ok_cmp and ok_luasnip then
   cmp.setup({
+    performance = {
+      debounce = 150,      -- Delay cmp updates while typing
+      throttle = 60,        -- Limit completion rendering frequency
+      fetching_timeout = 200, -- Maximum time to wait for a source before displaying results
+    },
     snippet = {
       expand = function(args)
         luasnip.lsp_expand(args.body)
@@ -32,11 +37,11 @@ if ok_cmp and ok_luasnip then
       end, { "i", "s" }),
     }),
     sources = cmp.config.sources({
-      { name = "nvim_lsp" },
+      { name = "nvim_lsp", keyword_length = 2 },
       { name = "nvim_lsp_signature_help" },
-      { name = "luasnip" },
-      { name = "buffer" },
-      { name = "path" },
+      { name = "luasnip", keyword_length = 2 },
+      { name = "buffer", keyword_length = 3 },
+      { name = "path", keyword_length = 3 },
     }),
   })
 end

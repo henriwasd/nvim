@@ -43,9 +43,6 @@ M.plugins = {
   { repo = "L3MON4D3/LuaSnip",                       name = "LuaSnip" },
   { repo = "saadparwaiz1/cmp_luasnip",               name = "cmp_luasnip" },
 
-  -- Git
-  { repo = "NeogitOrg/neogit",                       name = "neogit" },
-
   -- Utilities
   { repo = "andymass/vim-matchup",                   name = "vim-matchup" },
   { repo = "windwp/nvim-ts-autotag",                 name = "nvim-ts-autotag" },

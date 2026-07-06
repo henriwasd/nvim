@@ -1,7 +1,7 @@
 -- 2. Statusline (Lualine)
 local ok_lualine, lualine = pcall(require, "lualine")
 if ok_lualine then
-  -- Async git status tracking
+  -- Async git status tracking (event-driven, no background timer)
   local git_status_cache = {
     branch = "",
     ahead = 0,
@@ -87,15 +87,7 @@ if ok_lualine then
     )
   end
 
-  -- Start periodic polling and auto-commands for status updates
-  local uv = vim.uv or vim.loop
-  if uv then
-    local git_timer = uv.new_timer()
-    if git_timer then
-      git_timer:start(0, 30000, vim.schedule_wrap(update_git_status))
-    end
-  end
-
+  -- Update only when entering/writing buffers, or when focus is gained (no timer)
   vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "FocusGained" }, {
     callback = function()
       update_git_status()

@@ -111,11 +111,11 @@ map({ "n", "v" }, "<C-v>", '"+p', { desc = "Paste from clipboard" })
 map("i", "<C-v>", "<C-r>+", { desc = "Paste from clipboard" })
 
 -- --- NAVEGAÇÃO GLOBAL (SPLITS E BUFFERS) ---
--- Mover entre janelas (Ctrl + hjkl)
-map({ "n", "v", "t" }, "<C-h>", "<cmd>wincmd h<cr>", { desc = "Go to left window" })
-map({ "n", "v", "t" }, "<C-j>", "<cmd>wincmd j<cr>", { desc = "Go to lower window" })
-map({ "n", "v", "t" }, "<C-k>", "<cmd>wincmd k<cr>", { desc = "Go to upper window" })
-map({ "n", "v", "t" }, "<C-l>", "<cmd>wincmd l<cr>", { desc = "Go to right window" })
+-- Mover entre janelas (Ctrl + Arrow keys) (funciona em modo normal, insert, visual e terminal)
+map({ "n", "i", "v", "t" }, "<C-Left>", "<cmd>wincmd h<cr>", { desc = "Go to left window" })
+map({ "n", "i", "v", "t" }, "<C-Down>", "<cmd>wincmd j<cr>", { desc = "Go to lower window" })
+map({ "n", "i", "v", "t" }, "<C-Up>", "<cmd>wincmd k<cr>", { desc = "Go to upper window" })
+map({ "n", "i", "v", "t" }, "<C-Right>", "<cmd>wincmd l<cr>", { desc = "Go to right window" })
 
 -- Alternar entre buffers (Shift + h/l)
 map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
@@ -226,14 +226,6 @@ map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
 map("n", "pd", vim.diagnostic.goto_prev, { desc = "Previous Diagnostic" })
 map("n", "nd", vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
 
--- --- GIT INTEGRATIONS KEYMAPS ---
--- Neogit (Full Git Client)
-map("n", "<leader>gs", "<cmd>Neogit<cr>", { desc = "Git Status (Neogit)" })
-map("n", "<leader>gc", "<cmd>Neogit commit<cr>", { desc = "Git Commit (Neogit)" })
-map("n", "<leader>gp", "<cmd>Neogit pull<cr>", { desc = "Git Pull (Neogit)" })
-map("n", "<leader>gP", "<cmd>Neogit push<cr>", { desc = "Git Push (Neogit)" })
-map("n", "<leader>gl", "<cmd>Neogit log<cr>", { desc = "Git Log (Neogit)" })
-map("n", "<leader>gd", "<cmd>Neogit diff<cr>", { desc = "Git Diff (Neogit)" })
 
 -- --- WINDOW MANAGEMENT (<leader>w) ---
 map("n", "<leader>ww", "<cmd>wincmd w<cr>", { desc = "Switch to Other Window" })
@@ -250,11 +242,11 @@ map("n", "<leader>w_", "<cmd>resize -5<cr>", { desc = "Decrease Height" })
 map("n", "<leader>w>", "<cmd>vertical resize +5<cr>", { desc = "Increase Width" })
 map("n", "<leader>w<", "<cmd>vertical resize -5<cr>", { desc = "Decrease Width" })
 
--- Resize window with Alt + HJKL
-map("n", "<A-K>", "<cmd>resize +2<cr>", { desc = "Increase Height" })
-map("n", "<A-J>", "<cmd>resize -2<cr>", { desc = "Decrease Height" })
-map("n", "<A-H>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Width" })
-map("n", "<A-L>", "<cmd>vertical resize +2<cr>", { desc = "Increase Width" })
+-- Resize window with Alt + Arrow keys (works in normal, insert, visual, terminal modes)
+map({ "n", "i", "v", "t" }, "<A-Up>", "<cmd>resize +2<cr>", { desc = "Increase Height" })
+map({ "n", "i", "v", "t" }, "<A-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Height" })
+map({ "n", "i", "v", "t" }, "<A-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Width" })
+map({ "n", "i", "v", "t" }, "<A-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Width" })
 
 -- Move window position
 map("n", "<leader>wH", "<cmd>wincmd H<cr>", { desc = "Move Window to Left" })
@@ -281,5 +273,8 @@ vim.keymap.set("c", "<CR>", function()
   return "<CR>"
 end, { expr = true, replace_keycodes = true })
 
--- Neogit
-map("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Neogit Status" })
+-- --- AI / SUPERMAVEN CONTROLS ---
+map("n", "<leader>as", "<cmd>SupermavenStart<cr>", { desc = "Start Supermaven AI" })
+map("n", "<leader>ap", "<cmd>SupermavenStop<cr>", { desc = "Stop Supermaven AI" })
+map("n", "<leader>at", "<cmd>SupermavenToggle<cr>", { desc = "Toggle Supermaven AI" })
+

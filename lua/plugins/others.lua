@@ -46,6 +46,11 @@ if ok_sm then
       cterm = 244,
     },
   })
+  -- Stop Supermaven binary from running/polling at startup to save network and CPU resources.
+  -- You can start/toggle it manually using keymaps or commands: :SupermavenStart / :SupermavenToggle
+  pcall(function()
+    require("supermaven-nvim.api").stop()
+  end)
 end
 
 -- 13. Debugging (nvim-dap & nvim-dap-ui & nvim-dap-virtual-text)
@@ -133,6 +138,7 @@ if ok_wk then
   wk.add({
     { "<leader>w", group = "Window" },
     { "<leader>b", group = "Buffer" },
+    { "<leader>a", group = "AI / Supermaven" },
   })
 end
 
@@ -164,7 +170,6 @@ if ok_oil then
       signcolumn = "yes:2",
     },
   })
-
   -- Git status integration for oil.nvim
   local ok_oil_git, oil_git = pcall(require, "oil-git-status")
   if ok_oil_git then
@@ -193,13 +198,17 @@ end
 -- 23. Inline Diagnostics (tiny-inline-diagnostic)
 local ok_inline_diag, inline_diag = pcall(require, "tiny-inline-diagnostic")
 if ok_inline_diag then
-  -- Disable default virtual text to prevent duplication
-  vim.diagnostic.config({ virtual_text = false })
+  -- Disable default virtual text and optimize diagnostic updates
+  vim.diagnostic.config({
+    virtual_text = false,
+    update_in_insert = false, -- Never update diagnostics while typing (huge performance boost!)
+    severity_sort = true,
+  })
 
   inline_diag.setup({
-    preset = "modern", -- Options: 'classic', 'modern', 'cheap', 'ghost', 'none'
+    preset = "cheap", -- Less CPU rendering overhead than 'modern'
     options = {
-      throttle = 20, -- Throttle time in ms
+      throttle = 150, -- Throttle calculation to 150ms to save CPU
       softwrap = 15,
       multiple_diag_under_cursor = true,
     },
