@@ -7,78 +7,13 @@ map({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 map("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clean search highlights" })
 
 -- --- NATIVE TERMINAL TOGGLE ---
-local terminals = {} -- Map of ID (number) to { buf = bufnr, win = winid }
-local last_active_term_id = 1
-
-local function toggle_terminal()
-  local count = vim.v.count
-  local term_id = count > 0 and count or last_active_term_id
-  last_active_term_id = term_id
-
-  -- Clean up invalid window references in other terminals
-  for id, term in pairs(terminals) do
-    if id ~= term_id then
-      if term.win and not vim.api.nvim_win_is_valid(term.win) then
-        term.win = nil
-      end
-    end
-  end
-
-  local term = terminals[term_id]
-  if not term then
-    term = { buf = nil, win = nil }
-    terminals[term_id] = term
-  end
-
-  -- Validate current terminal's window and buffer
-  if term.win and not vim.api.nvim_win_is_valid(term.win) then
-    term.win = nil
-  end
-  if term.buf and not vim.api.nvim_buf_is_valid(term.buf) then
-    term.buf = nil
-  end
-
-  -- Check if this specific terminal is currently open (visible)
-  if term.win then
-    -- It is visible, so hide it
-    vim.api.nvim_win_hide(term.win)
-    term.win = nil
-  else
-    -- It is not visible.
-    -- First, hide any other visible terminals to keep a single terminal window
-    for id, other_term in pairs(terminals) do
-      if id ~= term_id and other_term.win and vim.api.nvim_win_is_valid(other_term.win) then
-        vim.api.nvim_win_hide(other_term.win)
-        other_term.win = nil
-      end
-    end
-
-    -- Create or validate buffer
-    if not term.buf then
-      term.buf = vim.api.nvim_create_buf(false, true)
-    end
-
-    -- Create the window
-    vim.cmd("botright 12split")
-    term.win = vim.api.nvim_get_current_win()
-    vim.api.nvim_win_set_buf(term.win, term.buf)
-
-    -- Initialize terminal if needed
-    if vim.bo[term.buf].buftype ~= "terminal" then
-      vim.fn.termopen(vim.o.shell)
-      pcall(vim.api.nvim_buf_set_name, term.buf, "Terminal " .. term_id)
-    end
-
-    vim.cmd("startinsert")
-  end
-end
-
--- Keymaps for terminal toggle
-map({ "n", "t" }, "<C-/>", toggle_terminal, { desc = "Toggle Terminal" })
-map({ "n", "t" }, "<C-_>", toggle_terminal, { desc = "Toggle Terminal" })
-map({ "n", "t" }, "<C-~>", toggle_terminal, { desc = "Toggle Terminal" })
-map({ "n", "t" }, "<C-`>", toggle_terminal, { desc = "Toggle Terminal" })
-map({ "n", "t" }, "<C-\\>", toggle_terminal, { desc = "Toggle Terminal (Fallback)" })
+local term = require("utils.terminal")
+-- Atalhos de compatibilidade (terminais diferentes enviam códigos diferentes para Ctrl+/)
+map({ "n", "t" }, "<C-/>", term.toggle_terminal, { desc = "Toggle Terminal" })
+map({ "n", "t" }, "<C-_>", term.toggle_terminal, { desc = "Toggle Terminal" })
+map({ "n", "t" }, "<C-`>", term.toggle_terminal, { desc = "Toggle Terminal" })
+map({ "n", "t" }, "<C-~>", term.toggle_terminal, { desc = "Toggle Terminal" })
+map({ "n", "t" }, "<C-\\>", term.toggle_terminal, { desc = "Toggle Terminal (Fallback)" })
 
 -- Terminal mode escapes
 map("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit Terminal Mode" })
@@ -146,14 +81,11 @@ map("n", "<leader>b[", "<cmd>BufferLineMovePrev<cr>", { desc = "Move Buffer Left
 map("n", "<leader>b]", "<cmd>BufferLineMoveNext<cr>", { desc = "Move Buffer Right" })
 
 -- Criar NOVO terminal em um split abaixo
-map({ "n", "t" }, "<C-S-`>", function()
+local function new_split_terminal()
   vim.cmd("botright split | terminal")
   vim.cmd("startinsert")
-end, { desc = "New Split Terminal" })
-map({ "n", "t" }, "<C-S-~>", function()
-  vim.cmd("botright split | terminal")
-  vim.cmd("startinsert")
-end, { desc = "New Split Terminal" })
+end
+map({ "n", "t" }, "<C-S-`>", new_split_terminal, { desc = "New Split Terminal" })
 
 -- Mover linhas (Alt + j/k)
 map("n", "<A-j>", "<cmd>m .+1<cr>==", { desc = "Move Down" })
@@ -169,16 +101,10 @@ map({ "n", "v" }, "<C-a>", "ggVG", { desc = "Select all" })
 map({ "n", "i", "x" }, "<C-s>", "<cmd>w<cr>", { desc = "Save File" })
 
 -- Formatar buffer / seleção (sem salvar)
-local function format_buffer()
-  local ok_conform, conform = pcall(require, "conform")
-  if ok_conform then
-    conform.format({ bufnr = 0, lsp_fallback = true })
-  else
-    vim.lsp.buf.format({ async = true })
-  end
-end
-map({ "n", "v" }, "<leader>cf", format_buffer, { desc = "Format Document / Selection" })
-map({ "n", "v" }, "<A-f>", format_buffer, { desc = "Format Document / Selection" })
+local fmt = require("utils.format")
+map({ "n", "v" }, "<leader>cf", function() fmt.format_buffer({ async = true }) end,
+  { desc = "Format Document / Selection" })
+
 -- Copiar, colar e cortar
 map("v", "<C-c>", '"+y', { desc = "Copy to clipboard" })
 map({ "n", "v" }, "<C-v>", '"+p', { desc = "Paste from clipboard" })
@@ -195,31 +121,34 @@ map({ "n", "v", "t" }, "<C-l>", "<cmd>wincmd l<cr>", { desc = "Go to right windo
 map("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
 map("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 
--- Mover entre janelas (Ctrl + Alt + Setas / Ctrl + Shift + Alt + Setas)
-map({ "n", "v", "t" }, "<C-M-Left>", "<cmd>wincmd h<cr>", { desc = "Go to left window" })
-map({ "n", "v", "t" }, "<C-M-Right>", "<cmd>wincmd l<cr>", { desc = "Go to right window" })
-map({ "n", "v", "t" }, "<C-M-Up>", "<cmd>wincmd k<cr>", { desc = "Go to upper window" })
-map({ "n", "v", "t" }, "<C-M-Down>", "<cmd>wincmd j<cr>", { desc = "Go to lower window" })
-
-map({ "n", "v", "t" }, "<C-S-M-Left>", "<cmd>wincmd h<cr>", { desc = "Go to left window" })
-map({ "n", "v", "t" }, "<C-S-M-Right>", "<cmd>wincmd l<cr>", { desc = "Go to right window" })
-map({ "n", "v", "t" }, "<C-S-M-Up>", "<cmd>wincmd k<cr>", { desc = "Go to upper window" })
-map({ "n", "v", "t" }, "<C-S-M-Down>", "<cmd>wincmd j<cr>", { desc = "Go to lower window" })
-
 -- --- Telescope (LazyVim Style Shortcuts) ---
-map("n", "<leader><space>", function()
+local function find_files()
   require("telescope.builtin").find_files()
-end, { desc = "Find Files (root dir)" })
+end
+
+local function live_grep()
+  require("telescope.builtin").live_grep()
+end
+
+local function fuzzy_find()
+  require("telescope.builtin").current_buffer_fuzzy_find()
+end
+
+local function show_commands()
+  require("telescope.builtin").commands()
+end
+
+map("n", "<leader><space>", find_files, { desc = "Find Files (root dir)" })
+map("n", "<leader>ff", find_files, { desc = "Find Files (root dir)" })
+
 map("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File" })
-map("n", "<leader>ff", function()
-  require("telescope.builtin").find_files()
-end, { desc = "Find Files (root dir)" })
 map("n", "<leader>fr", function()
   require("telescope.builtin").oldfiles()
 end, { desc = "Recent Files" })
 map("n", "<leader>fb", function()
   require("telescope.builtin").buffers()
 end, { desc = "Buffers" })
+
 -- Helper function to get visual selection text safely
 local function get_visual_selection()
   local old_reg = vim.fn.getreg("v")
@@ -236,20 +165,11 @@ local function get_visual_selection()
   return text
 end
 
-map("n", "<leader>sg", function()
-  require("telescope.builtin").live_grep()
-end, { desc = "Grep (root dir)" })
-map("n", "<leader>/", function()
-  require("telescope.builtin").live_grep()
-end, { desc = "Grep (root dir)" })
+map("n", "<leader>sg", live_grep, { desc = "Grep (root dir)" })
+map("n", "<leader>/", live_grep, { desc = "Grep (root dir)" })
 
 -- Search in current file (Normal mode)
-map("n", "<leader>ss", function()
-  require("telescope.builtin").current_buffer_fuzzy_find()
-end, { desc = "Search in Current File" })
-map("n", "<leader>sf", function()
-  require("telescope.builtin").current_buffer_fuzzy_find()
-end, { desc = "Search in Current File" })
+map("n", "<leader>ss", fuzzy_find, { desc = "Search in Current File" })
 
 -- Search visual selection in project (Grep)
 map("v", "<leader>sg", function()
@@ -258,14 +178,11 @@ map("v", "<leader>sg", function()
 end, { desc = "Search Selection in Project" })
 
 -- Search visual selection in current file
-map("v", "<leader>ss", function()
+local function fuzzy_find_selection()
   local text = get_visual_selection()
   require("telescope.builtin").current_buffer_fuzzy_find({ default_text = text })
-end, { desc = "Search Selection in File" })
-map("v", "<leader>sf", function()
-  local text = get_visual_selection()
-  require("telescope.builtin").current_buffer_fuzzy_find({ default_text = text })
-end, { desc = "Search Selection in File" })
+end
+map("v", "<leader>ss", fuzzy_find_selection, { desc = "Search Selection in File" })
 
 map("n", "<leader>sh", function()
   require("telescope.builtin").help_tags()
@@ -273,31 +190,17 @@ end, { desc = "Help Tags" })
 map("n", "<leader>sk", function()
   require("telescope.builtin").keymaps()
 end, { desc = "Key Maps" })
-map("n", "<leader>sC", function()
-  require("telescope.builtin").commands()
-end, { desc = "Commands Palette" })
+map("n", "<leader>sC", show_commands, { desc = "Commands Palette" })
+
 map("n", "<leader>sd", function()
   require("telescope.builtin").diagnostics()
 end, { desc = "Workspace Diagnostics" })
-map({ "n", "v" }, "<C-p>", function()
-  require("telescope.builtin").find_files()
-end, { desc = "Find Files" })
-map({ "n", "v" }, "<C-e>", function()
-  require("telescope.builtin").find_files()
-end, { desc = "Find Files" })
-map({ "n", "v" }, "<C-S-p>", function()
-  require("telescope.builtin").commands()
-end, { desc = "Command Palette" })
-map({ "n", "v" }, "<F1>", function()
-  require("telescope.builtin").commands()
-end, { desc = "Command Palette" })
 
 -- --- FOLDING ---
 map("n", "<C-k>z", "za", { desc = "Toggle Fold" })
 
 -- --- File Explorer (Oil.nvim) ---
 map("n", "<leader>e", "<cmd>Oil<cr>", { desc = "Open parent directory with Oil" })
-map("n", "-", "<cmd>Oil<cr>", { desc = "Open parent directory with Oil" })
 
 -- --- Search & Replace (Grug-far) ---
 map("n", "<leader>sr", function()
@@ -318,7 +221,6 @@ map("v", "<leader>sr", function()
   end
 end, { desc = "Search and Replace Selection (Grug-far)" })
 
-
 -- --- Diagnostics Mappings ---
 map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
 map("n", "pd", vim.diagnostic.goto_prev, { desc = "Previous Diagnostic" })
@@ -327,60 +229,18 @@ map("n", "nd", vim.diagnostic.goto_next, { desc = "Next Diagnostic" })
 -- --- GIT INTEGRATIONS KEYMAPS ---
 -- Neogit (Full Git Client)
 map("n", "<leader>gs", "<cmd>Neogit<cr>", { desc = "Git Status (Neogit)" })
-map("n", "<leader>gc", "<cmd>Neogit commit<cr>", { desc = "Git Commit" })
-map("n", "<leader>gp", "<cmd>Neogit pull<cr>", { desc = "Git Pull" })
-map("n", "<leader>gP", "<cmd>Neogit push<cr>", { desc = "Git Push" })
-
--- Diffview (Visual Diffs & History)
-map("n", "<leader>gd", "<cmd>DiffviewOpen<cr>", { desc = "Git Diff (Diffview)" })
-map("n", "<leader>gD", "<cmd>DiffviewClose<cr>", { desc = "Close Git Diff" })
-map("n", "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", { desc = "Git File History" })
-map("n", "<leader>gH", "<cmd>DiffviewFileHistory<cr>", { desc = "Git Project History" })
-
--- Telescope Git Picker
-map("n", "<leader>gb", function()
-  require("telescope.builtin").git_branches()
-end, { desc = "Git Branches" })
-map("n", "<leader>gl", function()
-  require("telescope.builtin").git_commits()
-end, { desc = "Git Commits Log" })
-
--- Gitsigns (Inline Git indicators & hunk actions)
-map("n", "]h", function()
-  if vim.wo.diff then return "]h" end
-  vim.schedule(function()
-    require("gitsigns").next_hunk()
-  end)
-  return "<Ignore>"
-end, { expr = true, desc = "Next Git Hunk" })
-
-map("n", "[h", function()
-  if vim.wo.diff then return "[h" end
-  vim.schedule(function()
-    require("gitsigns").prev_hunk()
-  end)
-  return "<Ignore>"
-end, { expr = true, desc = "Previous Git Hunk" })
-
-map("n", "<leader>ghs", "<cmd>Gitsigns stage_hunk<cr>", { desc = "Stage Git Hunk" })
-map("n", "<leader>ghr", "<cmd>Gitsigns reset_hunk<cr>", { desc = "Reset Git Hunk" })
-map("v", "<leader>ghs", function()
-  require("gitsigns").stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-end, { desc = "Stage Git Hunk (Visual)" })
-map("v", "<leader>ghr", function()
-  require("gitsigns").reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-end, { desc = "Reset Git Hunk (Visual)" })
-map("n", "<leader>ghp", "<cmd>Gitsigns preview_hunk<cr>", { desc = "Preview Git Hunk" })
-map("n", "<leader>gbl", "<cmd>Gitsigns toggle_current_line_blame<cr>", { desc = "Toggle Line Blame" })
+map("n", "<leader>gc", "<cmd>Neogit commit<cr>", { desc = "Git Commit (Neogit)" })
+map("n", "<leader>gp", "<cmd>Neogit pull<cr>", { desc = "Git Pull (Neogit)" })
+map("n", "<leader>gP", "<cmd>Neogit push<cr>", { desc = "Git Push (Neogit)" })
+map("n", "<leader>gl", "<cmd>Neogit log<cr>", { desc = "Git Log (Neogit)" })
+map("n", "<leader>gd", "<cmd>Neogit diff<cr>", { desc = "Git Diff (Neogit)" })
 
 -- --- WINDOW MANAGEMENT (<leader>w) ---
 map("n", "<leader>ww", "<cmd>wincmd w<cr>", { desc = "Switch to Other Window" })
 map("n", "<leader>wd", "<cmd>wincmd c<cr>", { desc = "Close Window" })
 map("n", "<leader>wo", "<cmd>wincmd o<cr>", { desc = "Maximize / Only Window" })
 map("n", "<leader>ws", "<cmd>split<cr>", { desc = "Split Horizontally" })
-map("n", "<leader>w-", "<cmd>split<cr>", { desc = "Split Horizontally" })
 map("n", "<leader>wv", "<cmd>vsplit<cr>", { desc = "Split Vertically" })
-map("n", "<leader>w|", "<cmd>vsplit<cr>", { desc = "Split Vertically" })
 map("n", "<leader>w=", "<cmd>wincmd =<cr>", { desc = "Equalize Window Sizes" })
 map("n", "<leader>wt", "<cmd>wincmd T<cr>", { desc = "Move Window to New Tab" })
 
@@ -390,12 +250,7 @@ map("n", "<leader>w_", "<cmd>resize -5<cr>", { desc = "Decrease Height" })
 map("n", "<leader>w>", "<cmd>vertical resize +5<cr>", { desc = "Increase Width" })
 map("n", "<leader>w<", "<cmd>vertical resize -5<cr>", { desc = "Decrease Width" })
 
--- Resize window with Alt + Shift + Setas / HJKL
-map("n", "<A-S-Up>", "<cmd>resize +2<cr>", { desc = "Increase Height" })
-map("n", "<A-S-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Height" })
-map("n", "<A-S-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Width" })
-map("n", "<A-S-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Width" })
-
+-- Resize window with Alt + HJKL
 map("n", "<A-K>", "<cmd>resize +2<cr>", { desc = "Increase Height" })
 map("n", "<A-J>", "<cmd>resize -2<cr>", { desc = "Decrease Height" })
 map("n", "<A-H>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Width" })
@@ -406,3 +261,25 @@ map("n", "<leader>wH", "<cmd>wincmd H<cr>", { desc = "Move Window to Left" })
 map("n", "<leader>wJ", "<cmd>wincmd J<cr>", { desc = "Move Window to Bottom" })
 map("n", "<leader>wK", "<cmd>wincmd K<cr>", { desc = "Move Window to Top" })
 map("n", "<leader>wL", "<cmd>wincmd L<cr>", { desc = "Move Window to Right" })
+
+-- --- FORMAT ALL AND WRITE ALL (:wa) ---
+-- Formatar todos os buffers modificados ao digitar :wa ou :wall
+vim.api.nvim_create_user_command("Wa", function(opts)
+  require("utils.format").format_and_save_all({ bang = opts.bang })
+end, { bang = true, desc = "Format and organize imports of all modified buffers and write all" })
+
+-- Redirecionar :wa, :wa!, :wall e :wall! ao pressionar Enter na linha de comando
+vim.keymap.set("c", "<CR>", function()
+  if vim.fn.getcmdtype() == ":" then
+    local cmd = vim.fn.getcmdline()
+    if cmd == "wa" or cmd == "wall" then
+      return "<C-u>Wa<CR>"
+    elseif cmd == "wa!" or cmd == "wall!" then
+      return "<C-u>Wa!<CR>"
+    end
+  end
+  return "<CR>"
+end, { expr = true, replace_keycodes = true })
+
+-- Neogit
+map("n", "<leader>gg", "<cmd>Neogit<cr>", { desc = "Neogit Status" })

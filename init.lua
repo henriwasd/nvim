@@ -5,17 +5,10 @@ vim.g.maplocalleader = " "
 -- Setup package manager (clones missing plugins using vim.pack)
 require("pack_manager").setup()
 
--- Load options
-require("options")
-
--- Load keymaps
-require("keymaps")
-
--- Load autocommands
-require("autocmds")
+-- Load core configurations
+require("core.options")
+require("core.keymaps")
+require("core.autocmds")
 
 -- Load plugin configurations
-require("plugin_configs")
-
--- Load remaining plugin configurations (LSP, Autocomplete, etc.)
-require("plugin_configs_lazy")
+require("plugins")

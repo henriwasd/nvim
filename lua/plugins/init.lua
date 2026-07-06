@@ -1,0 +1,15 @@
+-- Synchronously load core interface configurations (colorscheme, statusline, tabline)
+require("plugins.colorscheme")
+require("plugins.lualine")
+require("plugins.bufferline")
+
+-- Asynchronously load remaining plugin configurations to keep startup instant
+vim.schedule(function()
+  require("plugins.telescope")
+  require("plugins.treesitter")
+  require("plugins.cmp")
+  require("plugins.lsp")
+  require("plugins.conform")
+  require("plugins.neogit")
+  require("plugins.others")
+end)
