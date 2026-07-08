@@ -13,3 +13,11 @@ map({ "n", "i", "x" }, "<C-s>", "<cmd>w<cr>", { desc = "Save File" })
 map("v", "<C-c>", '"+y', { desc = "Copy to clipboard" })
 map({ "n", "v" }, "<C-v>", '"+p', { desc = "Paste from clipboard" })
 map("i", "<C-v>", "<C-r>+", { desc = "Paste from clipboard" })
+
+-- Redimensionar janelas usando Alt + Setas (funciona nos modos normal, insert, visual e terminal)
+-- Útil porque muitos terminais capturam os atalhos padrões do LazyVim (Ctrl + Setas)
+map({ "n", "i", "v", "t" }, "<A-Up>", "<cmd>resize +2<cr>", { desc = "Increase Height" })
+map({ "n", "i", "v", "t" }, "<A-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Height" })
+map({ "n", "i", "v", "t" }, "<A-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Width" })
+map({ "n", "i", "v", "t" }, "<A-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Width" })
+
