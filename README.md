@@ -1,71 +1,85 @@
-# 🚀 Neovim Native Config
+# 🚀 LazyVim Custom Config
 
-A minimal and highly efficient Neovim configuration utilizing native package management (`pack/plugins/start/`) instead of third-party plugin managers like LazyVim or lazy.nvim. 
-
-Plugins are cloned and managed natively by Neovim's runtime path.
+Uma configuração do Neovim limpa, moderna e altamente otimizada, baseada no framework **[LazyVim](https://github.com/LazyVim/LazyVim)** com atalhos de produtividade e integrações inteligentes personalizadas.
 
 ---
 
-## 📂 Project Structure
+## 📂 Estrutura do Projeto
 
 ```text
 ~/.config/nvim/
-├── init.lua                # Main entry point (loads leader, options, keymaps, etc.)
-├── LICENSE                 # License file
-├── README.md               # This README
-├── stylua.toml             # StyLua formatter configuration
+├── init.lua                 # Ponto de entrada (carrega lua/config/lazy.lua)
+├── lazyvim.json             # Estado dos extras ativados via :LazyExtras
+├── lazy-lock.json           # Lockfile de controle de versão dos plugins
+├── LICENSE                  # Licença
+├── README.md                # Este README
+├── stylua.toml              # Formatação do StyLua
 └── lua/
-    ├── autocmds.lua        # Autocommands definition
-    ├── keymaps.lua         # Keyboard shortcuts and map configs
-    ├── options.lua         # Neovim options and settings (numbers, wrap, tabstop...)
-    ├── pack_manager.lua    # Native package manager code (cloning, updates, cleans)
-    └── plugin_configs.lua  # Configurations for LSP, autocomplete, treesitter, etc.
+    ├── config/
+    │   ├── autocmds.lua     # Comandos automáticos (sincronização de arquivos externos)
+    │   ├── keymaps.lua      # Atalhos globais personalizados (Ctrl+S, Ctrl+A, Alt+Setas...)
+    │   ├── lazy.lua         # Bootstrapping do lazy.nvim e plugins do LazyVim
+    │   └── options.lua      # Configurações do Neovim (shell do Windows e Neovide)
+    └── plugins/
+        ├── colorscheme.lua  # Tema Gruvbox personalizado (com fundo transparente)
+        ├── diagnostics.lua  # Diagnósticos inline modernos (tiny-inline-diagnostic.nvim)
+        ├── example.lua      # Arquivo de exemplo para declarar novos plugins customizados
+        └── formatting.lua   # Lógica inteligente de formatação (Biome vs Prettier)
 ```
 
 ---
 
-## 📦 Package Management
+## ✨ Recursos & Customizações
 
-Plugin management is handled by `lua/pack_manager.lua`, which bootstraps Neovim automatically on first run by cloning missing plugins to the native plugins path.
+### 📦 Gerenciamento Moderno de Plugins
+*   **Lazy Loading**: Plugins carregados assincronamente sob demanda, mantendo o startup instantâneo (< 30ms).
+*   **Controle e Estabilidade**: Lockfile (`lazy-lock.json`) para congelar versões e evitar quebra por atualizações de terceiros.
+*   **LazyVim Extras**: Ative suporte a linguagens (como Tailwind, Rust, TypeScript) ou ferramentas visuais instantaneamente com `:LazyExtras`.
 
-### Features
-- **Auto-Bootstrapping**: Clones missing plugins dynamically when Neovim starts up.
-- **Custom User Commands**:
-  - `:PackUpdate`: Performs a `git pull` on all installed plugins.
-  - `:PackClean`: Safely deletes directory paths of plugins no longer specified in `pack_manager.lua`.
+### 🔄 Sincronização Inteligente com o Disco (Integração com Git/agy)
+*   **Autoreload automático**: O Neovim detecta e recarrega arquivos que foram editados externamente (ex: pelo **Antigravity / agy** ou `git checkout`) assim que você foca o editor ou entra em um buffer, contanto que não haja conflitos não salvos.
 
----
-
-## 🛠️ Requirements
-
-- Neovim **0.9.0+**
-- Git
-- A [Nerd Font](https://www.nerdfonts.com/) (recommended for devicons)
-- Ripgrep & FD (for Telescope fuzzy searching)
+### 🎨 Formatação de Código Dinâmica
+*   O plugin de formatação (`conform.nvim`) foi configurado de forma inteligente em `lua/plugins/formatting.lua`:
+    *   Usa **Biome** se detectar um arquivo `biome.json` ou `biome.jsonc` na raiz do projeto.
+    *   Cai de volta (**fallback**) para o **Prettier** se o Biome não estiver configurado para o projeto corrente.
 
 ---
 
-## 🚀 Getting Started
+## ⌨️ Atalhos Personalizados Principais
 
-1. Back up your existing configuration:
-   ```bash
-   # Unix/Linux/macOS
-   mv ~/.config/nvim ~/.config/nvim.backup
-   
-   # Windows (PowerShell)
-   Rename-Item -Path $env:LOCALAPPDATA\nvim -NewName nvim.backup
-   ```
+| Atalho | Modo | Ação |
+| :--- | :---: | :--- |
+| `Ctrl + A` | Normal / Visual | Seleciona todo o conteúdo do arquivo |
+| `Ctrl + S` | Normal / Insert / Visual | **Salva o arquivo sem formatar** (ignora autocmds) |
+| `:w` | Linha de comando | **Salva e formata** o arquivo atual (padrão) |
+| `:wa` ou `:wall` | Linha de comando | **Formata e salva todos os buffers** abertos e modificados |
+| `Ctrl + C` | Visual | Copia a seleção para a área de transferência do sistema |
+| `Ctrl + V` | Insert / Visual | Cola da área de transferência do sistema (livre em Normal para não quebrar splits no explorador) |
+| `Alt + ⬆️/⬇️/⬅️/➡️` | Todos | **Redimensiona painéis de janelas** (evita conflito do `Ctrl+Setas` no Windows Terminal) |
 
-2. Clone this repository:
-   ```bash
-   # Unix/Linux/macOS
-   git clone https://github.com/henriwasd/nvim.git ~/.config/nvim
+---
 
-   # Windows (PowerShell)
-   git clone https://github.com/henriwasd/nvim.git $env:LOCALAPPDATA\nvim
-   ```
+## 🚀 Como Começar
 
-3. Launch Neovim! The configuration will automatically clone all required packages and set up your workspace:
-   ```bash
-   nvim
-   ```
+### Pré-requisitos
+*   Neovim **0.9.0+**
+*   Git
+*   Uma [Nerd Font](https://www.nerdfonts.com/) instalada (ex: JetBrainsMono Nerd Font)
+*   Ripgrep & FD (para o buscador fuzzy Telescope funcionar perfeitamente)
+
+### Instalação no PC Novo
+1.  Faça o backup de qualquer configuração atual do Neovim:
+    ```powershell
+    # Windows (PowerShell)
+    Rename-Item -Path $env:LOCALAPPDATA\nvim -NewName nvim.backup
+    ```
+2.  Clone o repositório oficial na pasta correta:
+    ```powershell
+    # Windows (PowerShell)
+    git clone https://github.com/henriwasd/nvim.git $env:LOCALAPPDATA\nvim
+    ```
+3.  Inicie o Neovim! Ele baixará automaticamente o `lazy.nvim`, o core do `LazyVim` e todos os plugins listados:
+    ```powershell
+    nvim
+    ```
