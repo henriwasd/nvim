@@ -6,8 +6,8 @@ local map = vim.keymap.set
 -- Selecionar tudo (Ctrl + a)
 map({ "n", "v" }, "<C-a>", "ggVG", { desc = "Select all" })
 
--- Salvar arquivo (Ctrl + s)
-map({ "n", "i", "x" }, "<C-s>", "<cmd>w<cr>", { desc = "Save File" })
+-- Salvar arquivo sem formatar (Ctrl + s)
+map({ "n", "i", "x" }, "<C-s>", "<cmd>noautocmd w<cr>", { desc = "Save File (No Format)" })
 
 -- Copiar e colar usando a área de transferência do sistema (Ctrl + c / Ctrl + v)
 map("v", "<C-c>", '"+y', { desc = "Copy to clipboard" })
