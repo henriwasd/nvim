@@ -1,12 +1,12 @@
--- 7. Autocomplete (nvim-cmp & LuaSnip)
+
 local ok_cmp, cmp = pcall(require, "cmp")
 local ok_luasnip, luasnip = pcall(require, "luasnip")
 if ok_cmp and ok_luasnip then
   cmp.setup({
     performance = {
-      debounce = 150,      -- Delay cmp updates while typing
-      throttle = 60,        -- Limit completion rendering frequency
-      fetching_timeout = 200, -- Maximum time to wait for a source before displaying results
+      debounce = 150,
+      throttle = 60,
+      fetching_timeout = 200,
     },
     snippet = {
       expand = function(args)

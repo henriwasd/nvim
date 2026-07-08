@@ -1,6 +1,6 @@
 local M = {}
 
--- Organizar imports dinamicamente via LSP (eslint, vtsls, ts_ls, gopls, etc.)
+
 function M.organize_imports(bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
   local get_clients = vim.lsp.get_clients or vim.lsp.get_active_clients
@@ -58,11 +58,11 @@ function M.organize_imports(bufnr)
   end
 end
 
--- Formatar buffer atual ou buffer específico (síncrono ou assíncrono)
+
 function M.format_buffer(opts)
   opts = opts or {}
   local bufnr = opts.bufnr or 0
-  local async = opts.async ~= false -- default to true
+  local async = opts.async ~= false
   
   local ok_conform, conform = pcall(require, "conform")
   if ok_conform then
@@ -72,14 +72,14 @@ function M.format_buffer(opts)
   end
 end
 
--- Executa formatação + organização de imports em todos os buffers modificados e depois salva
+
 function M.format_and_save_all(opts)
   opts = opts or {}
   for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
     if vim.api.nvim_buf_is_loaded(bufnr) and vim.bo[bufnr].modifiable and vim.bo[bufnr].modified then
-      -- 1. Organiza imports
+
       pcall(M.organize_imports, bufnr)
-      -- 2. Formata de forma síncrona para garantir a gravação correta
+
       M.format_buffer({ bufnr = bufnr, async = false })
     end
   end

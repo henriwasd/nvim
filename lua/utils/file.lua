@@ -1,8 +1,8 @@
 local M = {}
 
-M.max_filesize = 1 * 1024 * 1024 -- 1MB
+M.max_filesize = 1 * 1024 * 1024
 
--- Verifica se um buffer contém um arquivo grande (> 1MB)
+
 function M.is_large_file(bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
   local path = vim.api.nvim_buf_get_name(bufnr)

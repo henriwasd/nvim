@@ -1,4 +1,4 @@
--- 3. Tabline (Bufferline)
+
 local ok_bufferline, bufferline = pcall(require, "bufferline")
 if ok_bufferline then
   bufferline.setup({

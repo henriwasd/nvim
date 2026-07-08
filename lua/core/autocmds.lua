@@ -1,4 +1,3 @@
--- --- LSP ATTACH AUTOCMAND (Mapeamento de Teclas do LSP para buffers ativos) ---
 local lsp_attach_group = vim.api.nvim_create_augroup("lsp_attach_keymaps", { clear = true })
 vim.api.nvim_create_autocmd("LspAttach", {
   group = lsp_attach_group,
@@ -6,7 +5,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     local bufnr = args.buf
     local client = vim.lsp.get_client_by_id(args.data.client_id)
 
-    -- Desativa capacidades do Biome que conflitam com o tsserver (vtsls) para evitar duplicidades
     if client and client.name == "biome" then
       client.server_capabilities.definitionProvider = false
       client.server_capabilities.referencesProvider = false
@@ -23,7 +21,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
       vim.keymap.set(mode, lhs, rhs, opts)
     end
 
-    -- Atalhos de Navegação do LSP (Deduplicados e formatados)
     map("n", "gd", function()
       local get_clients = vim.lsp.get_clients or vim.lsp.get_active_clients
       local clients = get_clients({ bufnr = 0 })
@@ -59,7 +56,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
           local uri = loc.uri or loc.targetUri
           local range = loc.range or loc.targetSelectionRange
           if uri and range then
-            -- Normaliza o caminho do arquivo para evitar duplicados por diferença de case/barras no Windows
             local path = vim.uri_to_fname(uri):lower():gsub("\\", "/")
             local line = range.start.line
             local char = range.start.character
@@ -76,14 +72,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
         elseif #unique == 1 then
           vim.lsp.util.jump_to_location(unique[1], "utf-8", true)
         else
-          -- Popula a quickfix list com os itens únicos e abre com o Telescope
           local qf_items = {}
           for _, loc in ipairs(unique) do
             local uri = loc.uri or loc.targetUri
             local range = loc.range or loc.targetSelectionRange
             local filename = vim.uri_to_fname(uri)
 
-            -- Tenta ler a linha correspondente para mostrar no Telescope
             local line_text = ""
             local file = io.open(filename, "r")
             if file then
@@ -124,7 +118,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation" })
     map("n", "gK", vim.lsp.buf.signature_help, { desc = "Signature Help" })
 
-    -- Ações de Código do LSP
     local ok_inc_rename, _ = pcall(require, "inc_rename")
     local rename_fn = vim.lsp.buf.rename
     local rename_opts = { desc = "Rename Symbol" }
@@ -142,8 +135,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
--- --- OTIMIZAÇÃO PARA ARQUIVOS GRANDES ---
--- Desabilita recursos pesados ao abrir arquivos maiores que 1MB para evitar travamentos
 local large_file_group = vim.api.nvim_create_augroup("large_file_optimization", { clear = true })
 local file_utils = require("utils.file")
 
@@ -153,7 +144,6 @@ vim.api.nvim_create_autocmd({ "BufReadPre" }, {
     if file_utils.is_large_file(args.buf) then
       vim.bo[args.buf].swapfile = false
       vim.bo[args.buf].undofile = false
-      -- Desabilita folds automáticos (que usam treesitter/expr muito lentos)
       vim.wo.foldmethod = "manual"
       vim.wo.foldexpr = ""
     end
@@ -165,25 +155,23 @@ vim.api.nvim_create_autocmd({ "BufReadPost" }, {
   callback = function(args)
     local bufnr = args.buf
     if file_utils.is_large_file(bufnr) then
-      -- Desativa syntax highlighting padrão do Vim
       vim.cmd("syntax clear")
       vim.cmd("syntax off")
-      
-      -- Desativa matchparen (destaque de parênteses correspondentes, muito lento)
+
+
       vim.cmd("NoMatchParen")
-      
-      -- Se o Treesitter estiver ativo para esse buffer, para ele
+
       local ok_ts, ts = pcall(require, "nvim-treesitter.configs")
       if ok_ts then
         pcall(vim.treesitter.stop, bufnr)
       end
-      
-      vim.notify("Arquivo grande detectado (> 1MB). Recursos pesados desabilitados para melhor performance.", vim.log.levels.WARN, { title = "Performance" })
+
+      vim.notify("Arquivo grande detectado (> 1MB). Recursos pesados desabilitados para melhor performance.",
+        vim.log.levels.WARN, { title = "Performance" })
     end
   end,
 })
 
--- Impede que servidores LSP se anexem a buffers de arquivos grandes
 vim.api.nvim_create_autocmd("LspAttach", {
   group = large_file_group,
   callback = function(args)

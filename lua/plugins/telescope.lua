@@ -1,4 +1,4 @@
--- 5. Fuzzy Finder (Telescope)
+
 local ok_telescope, telescope = pcall(require, "telescope")
 if ok_telescope then
   telescope.setup({

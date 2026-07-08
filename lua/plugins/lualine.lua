@@ -1,7 +1,7 @@
--- 2. Statusline (Lualine)
+
 local ok_lualine, lualine = pcall(require, "lualine")
 if ok_lualine then
-  -- Async git status tracking (event-driven, no background timer)
+
   local git_status_cache = {
     branch = "",
     ahead = 0,
@@ -87,14 +87,14 @@ if ok_lualine then
     )
   end
 
-  -- Update only when entering/writing buffers, or when focus is gained (no timer)
+
   vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "FocusGained" }, {
     callback = function()
       update_git_status()
     end,
   })
 
-  -- Component to show git status information (ahead/behind, changes)
+
   local function get_git_status_str()
     if git_status_cache.branch == "" then
       return ""
@@ -102,7 +102,7 @@ if ok_lualine then
 
     local parts = {}
 
-    -- Ahead / Behind (pull/push dependencies)
+
     if git_status_cache.ahead > 0 then
       table.insert(parts, "⇡" .. git_status_cache.ahead)
     end
@@ -110,7 +110,7 @@ if ok_lualine then
       table.insert(parts, "⇣" .. git_status_cache.behind)
     end
 
-    -- Files changed (staged, unstaged, untracked, conflicted)
+
     local changes = {}
     if git_status_cache.staged > 0 then
       table.insert(changes, "●" .. git_status_cache.staged)
@@ -145,13 +145,13 @@ if ok_lualine then
         { "branch", icon = "" },
         {
           get_git_status_str,
-          color = { fg = "#fe8019" }, -- Gruvbox orange for beautiful accent color
+          color = { fg = "#fe8019" },
         },
       },
       lualine_c = {
         {
           "filename",
-          path = 1, -- 0: Just filename, 1: Relative path, 2: Absolute path, 3: Absolute path with tilde
+          path = 1,
         },
       },
       lualine_x = {

@@ -1,4 +1,4 @@
--- 8.5 Auto-formatting (conform.nvim)
+
 local ok_conform, conform = pcall(require, "conform")
 if ok_conform then
   conform.setup({
@@ -24,9 +24,9 @@ if ok_conform then
         end,
       },
     },
-    -- format_on_save = {
-    --   timeout_ms = 2000,
-    --   lsp_fallback = true,
-    -- },
+
+
+
+
   })
 end
