@@ -3,12 +3,12 @@ return {
     "stevearc/conform.nvim",
     opts = {
       formatters_by_ft = {
-        javascript = { { "biome", "prettier" } },
-        typescript = { { "biome", "prettier" } },
-        javascriptreact = { { "biome", "prettier" } },
-        typescriptreact = { { "biome", "prettier" } },
-        json = { { "biome", "prettier" } },
-        jsonc = { { "biome", "prettier" } },
+        javascript = { "biome", "prettier", stop_after_first = true },
+        typescript = { "biome", "prettier", stop_after_first = true },
+        javascriptreact = { "biome", "prettier", stop_after_first = true },
+        typescriptreact = { "biome", "prettier", stop_after_first = true },
+        json = { "biome", "prettier", stop_after_first = true },
+        jsonc = { "biome", "prettier", stop_after_first = true },
       },
       formatters = {
         -- Biome só será executado se houver um arquivo 'biome.json' ou 'biome.jsonc' no projeto
