@@ -11,7 +11,7 @@ map({ "n", "i", "x" }, "<C-s>", "<cmd>w<cr>", { desc = "Save File" })
 
 -- Copiar e colar usando a área de transferência do sistema (Ctrl + c / Ctrl + v)
 map("v", "<C-c>", '"+y', { desc = "Copy to clipboard" })
-map({ "n", "v" }, "<C-v>", '"+p', { desc = "Paste from clipboard" })
+map("v", "<C-v>", '"+p', { desc = "Paste from clipboard" })
 map("i", "<C-v>", "<C-r>+", { desc = "Paste from clipboard" })
 
 -- Redimensionar janelas usando Alt + Setas (funciona nos modos normal, insert, visual e terminal)
