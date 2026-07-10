@@ -256,22 +256,6 @@ map("n", "<leader>wL", "<cmd>wincmd L<cr>", { desc = "Move Window to Right" })
 
 
 
-vim.api.nvim_create_user_command("Wa", function(opts)
-  require("utils.format").format_and_save_all({ bang = opts.bang })
-end, { bang = true, desc = "Format and organize imports of all modified buffers and write all" })
-
-
-vim.keymap.set("c", "<CR>", function()
-  if vim.fn.getcmdtype() == ":" then
-    local cmd = vim.fn.getcmdline()
-    if cmd == "wa" or cmd == "wall" then
-      return "<C-u>Wa<CR>"
-    elseif cmd == "wa!" or cmd == "wall!" then
-      return "<C-u>Wa!<CR>"
-    end
-  end
-  return "<CR>"
-end, { expr = true, replace_keycodes = true })
 
 
 map("n", "<leader>as", "<cmd>SupermavenStart<cr>", { desc = "Start Supermaven AI" })

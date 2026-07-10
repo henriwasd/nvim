@@ -68,9 +68,9 @@ M.plugins = {
 
 
   { repo = "echasnovski/mini.hipatterns",            name = "mini.hipatterns" },
-
-
-  { repo = "rachartier/tiny-inline-diagnostic.nvim", name = "tiny-inline-diagnostic.nvim" }
+  { repo = "rachartier/tiny-inline-diagnostic.nvim", name = "tiny-inline-diagnostic.nvim" },
+  { repo = "lewis6991/gitsigns.nvim",                name = "gitsigns.nvim" },
+  { repo = "tpope/vim-fugitive",                      name = "vim-fugitive" }
 }
 
 function M.bootstrap()

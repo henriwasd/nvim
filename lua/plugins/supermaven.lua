@@ -11,8 +11,4 @@ if ok_sm then
       cterm = 244,
     },
   })
-
-  pcall(function()
-    require("supermaven-nvim.api").stop()
-  end)
 end
