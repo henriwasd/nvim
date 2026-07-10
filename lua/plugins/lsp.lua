@@ -53,6 +53,39 @@ if ok_mason_lsp and ok_lspconfig then
     })
   end
 
+  if vim.lsp.config then
+    vim.lsp.config("pyright", {
+      settings = {
+        python = {
+          analysis = {
+            diagnosticMode = "workspace",
+          },
+        },
+      },
+    })
+
+    local ts_config = {
+      settings = {
+        typescript = {
+          tsserver = {
+            experimental = {
+              enableProjectDiagnostics = true,
+            },
+          },
+        },
+        javascript = {
+          tsserver = {
+            experimental = {
+              enableProjectDiagnostics = true,
+            },
+          },
+        },
+      },
+    }
+    vim.lsp.config("ts_ls", ts_config)
+    vim.lsp.config("tsserver", ts_config)
+  end
+
 
   mason_lsp.setup({
     ensure_installed = { "lua_ls" },
