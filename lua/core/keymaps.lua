@@ -197,7 +197,13 @@ map("n", "<leader>sd", function()
 end, { desc = "Workspace Diagnostics" })
 
 
-map("n", "<C-k>z", "za", { desc = "Toggle Fold" })
+map("n", "<C-k>z", "<cmd>silent! normal! za<CR>", { desc = "Toggle Fold (Silent)" })
+map("n", "za", "<cmd>silent! normal! za<CR>", { desc = "Toggle Fold (Silent)" })
+map("n", "zo", "<cmd>silent! normal! zo<CR>", { desc = "Open Fold (Silent)" })
+map("n", "zc", "<cmd>silent! normal! zc<CR>", { desc = "Close Fold (Silent)" })
+map("n", "zR", "<cmd>silent! normal! zR<CR>", { desc = "Open All Folds (Silent)" })
+map("n", "zM", "<cmd>silent! normal! zM<CR>", { desc = "Close All Folds (Silent)" })
+
 
 
 map("n", "<leader>e", "<cmd>Oil<cr>", { desc = "Open parent directory with Oil" })
