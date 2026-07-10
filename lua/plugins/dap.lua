@@ -3,6 +3,45 @@ local ok_dapui, dapui = pcall(require, "dapui")
 if ok_dap and ok_dapui then
   dapui.setup()
 
+  -- Setup Dart/Flutter adapter and configs
+  local flutter_bin = "flutter"
+  if vim.fn.executable("mise") == 1 then
+    local handle = io.popen("mise where flutter")
+    if handle then
+      local result = handle:read("*a")
+      handle:close()
+      if result then
+        result = result:gsub("%s+$", "") -- trim whitespace/newlines
+        if result ~= "" then
+          local bin_bat = result .. "/bin/flutter.bat"
+          local bin_sh = result .. "/bin/flutter"
+          if vim.fn.executable(bin_bat) == 1 then
+            flutter_bin = bin_bat
+          elseif vim.fn.executable(bin_sh) == 1 then
+            flutter_bin = bin_sh
+          end
+        end
+      end
+    end
+  end
+
+  dap.adapters.dart = {
+    type = "executable",
+    command = flutter_bin,
+    args = { "debug-adapter" },
+  }
+
+  dap.configurations.dart = {
+    {
+      type = "dart",
+      request = "launch",
+      name = "Launch Flutter",
+      program = "${workspaceFolder}/lib/main.dart",
+      cwd = "${workspaceFolder}",
+      toolArgs = {},
+    }
+  }
+
   dap.listeners.after.event_initialized["dapui_config"] = function()
     dapui.open()
   end
