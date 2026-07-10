@@ -109,8 +109,84 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end, { desc = "Go to Definition (Deduplicated)" })
 
     map("n", "gr", function()
-      require("telescope.builtin").lsp_references()
-    end, { desc = "References" })
+      local get_clients = vim.lsp.get_clients or vim.lsp.get_active_clients
+      local clients = get_clients({ bufnr = 0 })
+      local has_references_support = false
+      for _, c in ipairs(clients) do
+        if c.initialized and c.supports_method("textDocument/references") then
+          has_references_support = true
+          break
+        end
+      end
+      if not has_references_support then
+        vim.notify("Nenhum cliente LSP com suporte a referências ativo", vim.log.levels.WARN, { title = "LSP" })
+        return
+      end
+
+      local params = vim.lsp.util.make_position_params()
+      params.context = { includeDeclaration = true }
+
+      vim.lsp.buf_request(0, "textDocument/references", params, function(err, result)
+        if err or not result or vim.tbl_isempty(result) then
+          vim.notify("Nenhuma referência encontrada", vim.log.levels.INFO, { title = "LSP" })
+          return
+        end
+
+        local unique = {}
+        local seen = {}
+        for _, loc in ipairs(result) do
+          local uri = loc.uri or loc.targetUri
+          local range = loc.range or loc.targetSelectionRange
+          if uri and range then
+            local path = vim.uri_to_fname(uri):lower():gsub("\\", "/")
+            local line = range.start.line
+            local char = range.start.character
+            local key = path .. ":" .. line .. ":" .. char
+            if not seen[key] then
+              table.insert(unique, loc)
+              seen[key] = true
+            end
+          end
+        end
+
+        if #unique == 0 then
+          vim.notify("Nenhuma referência encontrada", vim.log.levels.INFO, { title = "LSP" })
+        else
+          local qf_items = {}
+          for _, loc in ipairs(unique) do
+            local uri = loc.uri or loc.targetUri
+            local range = loc.range or loc.targetSelectionRange
+            local filename = vim.uri_to_fname(uri)
+
+            local line_text = ""
+            local file = io.open(filename, "r")
+            if file then
+              local current_line = 0
+              for l in file:lines() do
+                if current_line == range.start.line then
+                  line_text = l:gsub("^%s*", "")
+                  break
+                end
+                current_line = current_line + 1
+              end
+              file:close()
+            end
+
+            table.insert(qf_items, {
+              filename = filename,
+              lnum = range.start.line + 1,
+              col = range.start.character + 1,
+              text = line_text ~= "" and line_text or "[Referência]",
+            })
+          end
+
+          vim.fn.setqflist(qf_items, "r")
+          require("telescope.builtin").quickfix({
+            prompt_title = "Referências",
+          })
+        end
+      end)
+    end, { desc = "References (Deduplicated)" })
     map("n", "gI", function()
       require("telescope.builtin").lsp_implementations()
     end, { desc = "Goto Implementation" })
