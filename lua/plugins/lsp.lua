@@ -22,7 +22,12 @@ if ok_mason_lsp and ok_lspconfig then
 
 
   if vim.lsp.config then
-    vim.lsp.config("*", { capabilities = capabilities })
+    vim.lsp.config("*", {
+      capabilities = capabilities,
+      flags = {
+        debounce_text_changes = 50,
+      }
+    })
   end
 
 

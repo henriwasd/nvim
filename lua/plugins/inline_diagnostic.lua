@@ -2,7 +2,7 @@ local ok_inline_diag, inline_diag = pcall(require, "tiny-inline-diagnostic")
 if ok_inline_diag then
   vim.diagnostic.config({
     virtual_text = false,
-    update_in_insert = false,
+    update_in_insert = true,
     severity_sort = true,
   })
 
