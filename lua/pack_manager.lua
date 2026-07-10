@@ -87,6 +87,7 @@ function M.bootstrap()
     end
   end
   if missing then
+    pcall(vim.cmd, "helptags ALL")
     vim.notify("All plugins installed! Please restart Neovim if some features do not work.", vim.log.levels.INFO)
   end
 end
@@ -101,6 +102,7 @@ function M.update()
       print(out)
     end
   end
+  pcall(vim.cmd, "helptags ALL")
   print("Plugins update finished!")
 end
 
