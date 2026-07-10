@@ -7,10 +7,16 @@ if ok_flutter then
       run_via_dap = true,
       register_configurations = function(paths)
         local dap = require("dap")
+        local command = paths.flutter_bin
+        local args = { "debug-adapter" }
+        if vim.fn.has("win32") == 1 then
+          command = "cmd.exe"
+          args = { "/c", paths.flutter_bin, "debug-adapter" }
+        end
         dap.adapters.dart = {
           type = "executable",
-          command = paths.flutter_bin,
-          args = { "debug-adapter" },
+          command = command,
+          args = args,
         }
         dap.configurations.dart = {
           {

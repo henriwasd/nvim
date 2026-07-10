@@ -25,10 +25,17 @@ if ok_dap and ok_dapui then
     end
   end
 
+  local command = flutter_bin
+  local args = { "debug-adapter" }
+  if vim.fn.has("win32") == 1 then
+    command = "cmd.exe"
+    args = { "/c", flutter_bin, "debug-adapter" }
+  end
+
   dap.adapters.dart = {
     type = "executable",
-    command = flutter_bin,
-    args = { "debug-adapter" },
+    command = command,
+    args = args,
   }
 
   dap.configurations.dart = {
