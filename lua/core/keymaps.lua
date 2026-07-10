@@ -197,7 +197,6 @@ map("n", "<leader>sd", function()
 end, { desc = "Workspace Diagnostics" })
 
 
-map("n", "<C-k>z", "<cmd>silent! normal! za<CR>", { desc = "Toggle Fold (Silent)" })
 map("n", "za", "<cmd>silent! normal! za<CR>", { desc = "Toggle Fold (Silent)" })
 map("n", "zo", "<cmd>silent! normal! zo<CR>", { desc = "Open Fold (Silent)" })
 map("n", "zc", "<cmd>silent! normal! zc<CR>", { desc = "Close Fold (Silent)" })
