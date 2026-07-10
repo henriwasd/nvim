@@ -261,13 +261,4 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
-local format_on_save_group = vim.api.nvim_create_augroup("format_on_save", { clear = true })
-vim.api.nvim_create_autocmd("BufWritePre", {
-  group = format_on_save_group,
-  callback = function(args)
-    if vim.bo[args.buf].modifiable and not file_utils.is_large_file(args.buf) then
-      pcall(require("utils.format").format_buffer, { bufnr = args.buf, async = false })
-    end
-  end,
-})
 
