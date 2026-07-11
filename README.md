@@ -23,7 +23,7 @@ Uma configuração do Neovim limpa, moderna e altamente otimizada, baseada no fr
     └── plugins/
         ├── colorscheme.lua  # Tema Gruvbox personalizado (com fundo transparente)
         ├── diagnostics.lua  # Diagnósticos inline modernos (tiny-inline-diagnostic.nvim)
-        ├── example.lua      # Arquivo de exemplo para declarar novos plugins customizados
+        ├── disabled.lua     # Desativação de plugins pesados (noice.nvim, mini.animate) para notebooks fracos
         └── formatting.lua   # Lógica inteligente de formatação (Biome vs Prettier)
 ```
 
@@ -44,6 +44,11 @@ Uma configuração do Neovim limpa, moderna e altamente otimizada, baseada no fr
     *   Usa **Biome** se detectar um arquivo `biome.json` ou `biome.jsonc` na raiz do projeto.
     *   Cai de volta (**fallback**) para o **Prettier** se o Biome não estiver configurado para o projeto corrente.
 
+### ⚡ Otimização de Performance (para Notebooks Fracos)
+*   **Sem Formatação ao Salvar**: O recurso de auto-format foi desligado em `lua/config/options.lua` (`vim.g.autoformat = false`) para poupar CPU. Formate manualmente com o atalho padrão do LazyVim: `<leader>cf` (ou execute o comando `:LazyFormat`).
+*   **Verificação de Updates Desativada**: Desligada na configuração do `lazy.nvim` (`checker = { enabled = false }`) para economizar tráfego de rede e ciclos de processamento em segundo plano.
+*   **Interface Sem Elementos Pesados**: Desativamos os plugins `noice.nvim` (linha de comando popup e notificações estilizadas) e `mini.animate` (animações de rolagem e cursor) em `lua/plugins/disabled.lua`, garantindo fluidez e zero lag visual no terminal.
+
 ---
 
 ## ⌨️ Atalhos Personalizados Principais
@@ -51,9 +56,9 @@ Uma configuração do Neovim limpa, moderna e altamente otimizada, baseada no fr
 | Atalho | Modo | Ação |
 | :--- | :---: | :--- |
 | `Ctrl + A` | Normal / Visual | Seleciona todo o conteúdo do arquivo |
-| `Ctrl + S` | Normal / Insert / Visual | **Salva o arquivo sem formatar** (ignora autocmds) |
-| `:w` | Linha de comando | **Salva e formata** o arquivo atual (padrão) |
-| `:wa` ou `:wall` | Linha de comando | **Formata e salva todos os buffers** abertos e modificados |
+| `Ctrl + S` | Normal / Insert / Visual | **Salva o arquivo** sem rodar autocmds (salvamento rápido) |
+| `:w` ou `:wa` | Linha de comando | **Salva o(s) arquivo(s)** de forma padrão (sem auto-formatação) |
+| `<leader>cf` | Normal | **Formata o buffer atual manualmente** (comando padrão do LazyVim) |
 | `Ctrl + C` | Visual | Copia a seleção para a área de transferência do sistema |
 | `Ctrl + V` | Insert / Visual | Cola da área de transferência do sistema (livre em Normal para não quebrar splits no explorador) |
 | `Alt + ⬆️/⬇️/⬅️/➡️` | Todos | **Redimensiona painéis de janelas** (evita conflito do `Ctrl+Setas` no Windows Terminal) |
