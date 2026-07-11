@@ -6,3 +6,8 @@ debug
 foo.*
 *.log
 data
+
+# Configurações e estados locais do LazyVim (evita conflitos entre PCs)
+lazyvim.json
+lazy-lock.json
+.luarc.json
