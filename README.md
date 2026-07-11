@@ -69,23 +69,74 @@ Uma configuração do Neovim limpa, moderna e altamente otimizada, baseada no fr
 ## 🚀 Como Começar
 
 ### Pré-requisitos
-*   Neovim **0.9.0+**
-*   Git
-*   Uma [Nerd Font](https://www.nerdfonts.com/) instalada (ex: JetBrainsMono Nerd Font)
-*   Ripgrep & FD (para o buscador fuzzy Telescope funcionar perfeitamente)
+*   Uma [Nerd Font](https://www.nerdfonts.com/) instalada (ex: JetBrainsMono Nerd Font) para renderizar os ícones corretamente.
 
-### Instalação no PC Novo
-1.  Faça o backup de qualquer configuração atual do Neovim:
-    ```powershell
-    # Windows (PowerShell)
-    Rename-Item -Path $env:LOCALAPPDATA\nvim -NewName nvim.backup
-    ```
-2.  Clone o repositório oficial na pasta correta:
-    ```powershell
-    # Windows (PowerShell)
-    git clone https://github.com/henriwasd/nvim.git $env:LOCALAPPDATA\nvim
-    ```
-3.  Inicie o Neovim! Ele baixará automaticamente o `lazy.nvim`, o core do `LazyVim` e todos os plugins listados:
-    ```powershell
-    nvim
-    ```
+---
+
+### ⚡ Instalação Automatizada (Recomendado)
+
+#### Windows (PowerShell)
+Rode o comando abaixo para clonar a configuração e instalar todas as dependências (`Neovim`, `ripgrep`, `fd`, `lazygit`, `Node.js` e `compiler`):
+```powershell
+powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/henriwasd/nvim/master/setup.ps1 | iex"
+```
+
+#### Linux (Debian, Ubuntu, Arch, Fedora)
+Rode o comando abaixo no terminal para instalar a configuração e todas as dependências:
+```bash
+curl -fsSL https://raw.githubusercontent.com/henriwasd/nvim/master/setup.sh | bash
+```
+
+---
+
+### 🛠️ Instalação Manual (Alternativa)
+
+#### 🪟 Windows (PowerShell)
+
+1. **Backup da configuração antiga** (se aplicável):
+   ```powershell
+   Rename-Item -Path $env:LOCALAPPDATA\nvim -NewName nvim.backup
+   ```
+
+2. **Clonar o repositório** na pasta correta:
+   ```powershell
+   git clone https://github.com/henriwasd/nvim.git $env:LOCALAPPDATA\nvim
+   ```
+
+3. **Instalar dependências adicionais** via terminal:
+   * **ripgrep** (busca de texto): `winget install BurntSushi.ripgrep.MSVC`
+   * **fd** (busca de arquivos): `winget install sharkdp.fd`
+   * **lazygit** (interface Git): `winget install JesseDuffield.lazygit`
+   * **Node.js** (para LSPs): `winget install OpenJS.NodeJS.LTS`
+   * **Zig** (compilador para Treesitter): `winget install zig.zig`
+
+#### 🐧 Linux
+
+1. **Backup da configuração antiga** (se aplicável):
+   ```bash
+   mv ~/.config/nvim ~/.config/nvim.backup
+   ```
+
+2. **Clonar o repositório** na pasta correta:
+   ```bash
+   git clone https://github.com/henriwasd/nvim.git ~/.config/nvim
+   ```
+
+3. **Instalar dependências** usando seu gerenciador de pacotes:
+   * **Debian/Ubuntu**:
+     ```bash
+     sudo apt update && sudo apt install -y ripgrep fd-find nodejs npm build-essential
+     ```
+   * **Arch Linux**:
+     ```bash
+     sudo pacman -S ripgrep fd nodejs npm gcc lazygit
+     ```
+   * **Fedora**:
+     ```bash
+     sudo dnf install -y ripgrep fd-find nodejs npm gcc-c++ make
+     ```
+
+4. **Iniciar o Neovim**:
+   ```bash
+   nvim
+   ```
