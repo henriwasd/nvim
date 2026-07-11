@@ -9,7 +9,7 @@ return {
   -- Desativa animações do mini.animate (caso estejam ativas)
   -- para poupar ciclos de processamento da CPU
   {
-    "echasnovski/mini.animate",
+    "nvim-mini/mini.animate",
     enabled = false,
   },
 }
