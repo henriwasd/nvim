@@ -15,3 +15,8 @@ end
 -- Desativa a formatação automática ao salvar
 vim.g.autoformat = false
 
+-- Desativa providers desnecessários (Ruby, Perl) para otimizar tempo de inicialização
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
+
+

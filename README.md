@@ -48,6 +48,7 @@ Uma configuração do Neovim limpa, moderna e altamente otimizada, baseada no fr
 *   **Sem Formatação ao Salvar**: O recurso de auto-format foi desligado em `lua/config/options.lua` (`vim.g.autoformat = false`) para poupar CPU. Formate manualmente com o atalho padrão do LazyVim: `<leader>cf` (ou execute o comando `:LazyFormat`).
 *   **Verificação de Updates Desativada**: Desligada na configuração do `lazy.nvim` (`checker = { enabled = false }`) para economizar tráfego de rede e ciclos de processamento em segundo plano.
 *   **Interface Sem Elementos Pesados**: Desativamos os plugins `noice.nvim` (linha de comando popup e notificações estilizadas) e `mini.animate` (animações de rolagem e cursor) em `lua/plugins/disabled.lua`, garantindo fluidez e zero lag visual no terminal.
+*   **Desativação de Providers Legados**: Desativamos os hosts `ruby` e `perl` em `lua/config/options.lua` para acelerar o tempo de inicialização, eliminando buscas de executáveis em segundo plano.
 
 ---
 
