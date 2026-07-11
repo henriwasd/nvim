@@ -1,7 +1,5 @@
 -- Options are automatically loaded before autocmds and keymaps
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
-
--- Configuração do Shell para Windows (evita problemas com execução de comandos e Mason no Windows)
 if vim.fn.has("win32") == 1 then
   if vim.fn.executable("pwsh") == 1 then
     vim.opt.shell = "pwsh"
@@ -13,3 +11,7 @@ if vim.fn.has("win32") == 1 then
     vim.opt.shellxquote = ""
   end
 end
+
+-- Desativa a formatação automática ao salvar
+vim.g.autoformat = false
+

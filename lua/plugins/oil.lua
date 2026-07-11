@@ -21,23 +21,26 @@ return {
       },
       keymaps = {
         ["<CR>"] = "actions.select",
-        ["<C-v>"] = "actions.select_vsplit", -- Garante split vertical no Ctrl+V
-        ["<C-s>"] = "actions.select_split",  -- Garante split horizontal no Ctrl+S
+        ["<C-v>"] = "actions.select_vsplit",
+        ["<C-s>"] = "actions.select_split",
         ["<Esc>"] = "actions.close",
       },
     },
     config = function(_, opts)
       require("oil").setup(opts)
-      
-      -- Inicializa extensões do Oil
+
       pcall(require, "oil-git-status")
       pcall(require, "oil-lsp-diagnostics")
-      
+
       local ok_git, oil_git = pcall(require, "oil-git-status")
-      if ok_git then oil_git.setup() end
-      
+      if ok_git then
+        oil_git.setup()
+      end
+
       local ok_lsp, oil_lsp = pcall(require, "oil-lsp-diagnostics")
-      if ok_lsp then oil_lsp.setup() end
+      if ok_lsp then
+        oil_lsp.setup()
+      end
     end,
   },
 }
