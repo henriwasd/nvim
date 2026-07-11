@@ -16,6 +16,6 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHo
 vim.api.nvim_create_autocmd("FileChangedShellPost", {
   group = autoreload_group,
   callback = function()
-    vim.notify("Arquivo atualizado no editor (alterado no disco).", vim.log.levels.INFO, { title = "Antigravity / Git" })
+    vim.notify("Detected external changes, reloading.", vim.log.levels.INFO, { title = "File Changed" })
   end,
 })

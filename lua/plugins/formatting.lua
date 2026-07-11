@@ -18,7 +18,8 @@ return {
         },
         prettier = {
           condition = function(ctx)
-            local has_biome = vim.fs.find({ "biome.json", "biome.jsonc" }, { path = ctx.filename, upward = true })[1] ~= nil
+            local has_biome = vim.fs.find({ "biome.json", "biome.jsonc" }, { path = ctx.filename, upward = true })[1]
+              ~= nil
             return not has_biome
           end,
         },

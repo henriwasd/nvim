@@ -3,8 +3,6 @@ return {
     "stevearc/oil.nvim",
     dependencies = {
       "nvim-tree/nvim-web-devicons",
-      "refractalize/oil-git-status.nvim",
-      "JezerM/oil-lsp-diagnostics.nvim",
     },
     event = "VeryLazy",
     cmd = "Oil",
@@ -26,21 +24,21 @@ return {
         ["<Esc>"] = "actions.close",
       },
     },
-    config = function(_, opts)
-      require("oil").setup(opts)
+  },
 
-      pcall(require, "oil-git-status")
-      pcall(require, "oil-lsp-diagnostics")
+  -- Status do Git no Oil (Ex: modificado, adicionado)
+  {
+    "refractalize/oil-git-status.nvim",
+    dependencies = { "stevearc/oil.nvim" },
+    event = "VeryLazy",
+    config = true,
+  },
 
-      local ok_git, oil_git = pcall(require, "oil-git-status")
-      if ok_git then
-        oil_git.setup()
-      end
-
-      local ok_lsp, oil_lsp = pcall(require, "oil-lsp-diagnostics")
-      if ok_lsp then
-        oil_lsp.setup()
-      end
-    end,
+  -- Diagnósticos do LSP no Oil (Ex: erros, avisos nos arquivos)
+  {
+    "JezerM/oil-lsp-diagnostics.nvim",
+    dependencies = { "stevearc/oil.nvim" },
+    event = "VeryLazy",
+    config = true,
   },
 }
