@@ -16,3 +16,7 @@ vim.g.autoformat = false
 
 vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
+
+-- Habilita configurações específicas por projeto (.nvim.lua / .nvimrc)
+vim.opt.exrc = true
+
