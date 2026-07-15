@@ -10,7 +10,7 @@ return {
           accept_word = "<C-j>",
         },
         color = {
-          suggestion_color = "#888888",
+          suggestion_color = "#4a4a4a",
           cterm = 244,
         },
       })

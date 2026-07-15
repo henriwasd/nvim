@@ -25,16 +25,12 @@ return {
       },
     },
   },
-
-  -- Status do Git no Oil (Ex: modificado, adicionado)
   {
     "refractalize/oil-git-status.nvim",
     dependencies = { "stevearc/oil.nvim" },
     event = "VeryLazy",
     config = true,
   },
-
-  -- Diagnósticos do LSP no Oil (Ex: erros, avisos nos arquivos)
   {
     "JezerM/oil-lsp-diagnostics.nvim",
     dependencies = { "stevearc/oil.nvim" },
