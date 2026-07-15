@@ -14,3 +14,11 @@ map({ "n", "i", "v", "t" }, "<A-Up>", "<cmd>resize +2<cr>", { desc = "Increase H
 map({ "n", "i", "v", "t" }, "<A-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Height" })
 map({ "n", "i", "v", "t" }, "<A-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Width" })
 map({ "n", "i", "v", "t" }, "<A-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Width" })
+
+-- Override Snacks.terminal toggle to use the fixed working directory (getcwd) instead of the buffer's local root.
+-- This keeps a single persistent terminal at the monorepo root so it doesn't get lost when switching files.
+map("n", "<C-/>", function() Snacks.terminal.toggle(nil, { cwd = vim.fn.getcwd() }) end, { desc = "Terminal (cwd)" })
+map("n", "<c-_>", function() Snacks.terminal.toggle(nil, { cwd = vim.fn.getcwd() }) end, { desc = "Terminal (cwd)" })
+map("n", "<leader>ft", function() Snacks.terminal.toggle(nil, { cwd = vim.fn.getcwd() }) end, { desc = "Terminal (cwd)" })
+map("n", "<leader>fT", function() Snacks.terminal.toggle(nil, { cwd = LazyVim.root() }) end, { desc = "Terminal (Root Dir)" })
+
