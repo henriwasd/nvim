@@ -20,3 +20,5 @@ vim.g.loaded_perl_provider = 0
 vim.opt.exrc = true
 
 vim.opt.relativenumber = false
+
+vim.g.root_spec = { "cwd" }
