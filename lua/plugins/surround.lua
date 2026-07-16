@@ -2,7 +2,6 @@ return {
   {
     "nvim-mini/mini.surround",
     keys = function(_, keys)
-      -- Popula os atalhos baseados em opts.mappings
       local plugin = require("lazy.core.config").spec.plugins["mini.surround"]
       local opts = require("lazy.core.plugin").values(plugin, "opts", false)
       local mappings = {
@@ -18,13 +17,13 @@ return {
     end,
     opts = {
       mappings = {
-        add = "gza", -- Adicionar no modo normal e visual
-        delete = "gzd", -- Deletar
-        find = "gzf", -- Encontrar (direita)
-        find_left = "gzF", -- Encontrar (esquerda)
-        highlight = "gzh", -- Destacar
-        replace = "gzr", -- Substituir
-        update_n_lines = "gzn", -- Atualizar N linhas
+        add = "gza",
+        delete = "gzd",
+        find = "gzf",
+        find_left = "gzF",
+        highlight = "gzh",
+        replace = "gzr",
+        update_n_lines = "gzn",
       },
     },
   },
