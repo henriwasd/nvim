@@ -1,16 +1,27 @@
 return {
   {
     "saghen/blink.cmp",
+    dependencies = {
+      "saghen/blink.lib",
+      "rafamadriz/friendly-snippets",
+    },
+    build = function()
+      require("blink.cmp").build():pwait()
+    end,
+
+    ---@module 'blink.cmp'
+    ---@type blink.cmp.Config
     opts = {
       keymap = {
         preset = "default",
-        ["<C-x>"] = { "show", "show_documentation", "hide_documentation" },
       },
       completion = {
         documentation = {
           auto_show = true,
         },
       },
+      sources = { default = { 'lsp', 'path', 'snippets', 'buffer' } },
+      fuzzy = { implementation = "rust" }
     },
   },
 }
