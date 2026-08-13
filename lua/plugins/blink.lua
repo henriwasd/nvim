@@ -5,9 +5,7 @@ return {
       "saghen/blink.lib",
       "rafamadriz/friendly-snippets",
     },
-    build = function()
-      require("blink.cmp").build():pwait()
-    end,
+    version = "*",
 
     ---@module 'blink.cmp'
     ---@type blink.cmp.Config
@@ -21,7 +19,8 @@ return {
         },
       },
       sources = { default = { 'lsp', 'path', 'snippets', 'buffer' } },
-      fuzzy = { implementation = "rust" }
+      fuzzy = { implementation = "prefer_rust_with_warning" },
     },
   },
 }
+
