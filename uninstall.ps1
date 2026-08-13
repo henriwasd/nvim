@@ -14,8 +14,6 @@ $packages = @(
     @{ Name = "FD-find"; Id = "sharkdp.fd" },
     @{ Name = "LazyGit"; Id = "JesseDuffield.lazygit" },
     @{ Name = "Zig Compiler"; Id = "zig.zig" },
-    @{ Name = "Node.js LTS"; Id = "OpenJS.NodeJS.LTS" },
-    @{ Name = "Git"; Id = "Git.Git" }
 )
 
 Write-Host "`n[1/2] Desinstalando ferramentas instaladas pelo setup..." -ForegroundColor Yellow
