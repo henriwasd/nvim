@@ -148,3 +148,19 @@ curl -fsSL https://raw.githubusercontent.com/henriwasd/nvim/master/setup.sh | ba
    nvim
    ```
 
+---
+
+### 🗑️ Desinstalação Automatizada
+
+Para remover todas as ferramentas instaladas pelo script de setup e limpar as pastas de dados e cache do Neovim:
+
+#### Windows (PowerShell)
+```powershell
+powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/henriwasd/nvim/master/uninstall.ps1 | iex"
+```
+
+#### Linux
+```bash
+curl -fsSL https://raw.githubusercontent.com/henriwasd/nvim/master/uninstall.sh | bash
+```
+
