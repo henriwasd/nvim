@@ -12,13 +12,20 @@ return {
     opts = {
       keymap = {
         preset = "default",
+        ["<CR>"] = { "select_and_accept", "fallback" },
       },
       completion = {
+        list = {
+          selection = {
+            preselect = true,
+            auto_insert = false,
+          },
+        },
         documentation = {
           auto_show = true,
         },
       },
-      sources = { default = { 'lsp', 'path', 'snippets', 'buffer' } },
+      sources = { default = { "lsp", "path", "snippets", "buffer" } },
       fuzzy = { implementation = "prefer_rust_with_warning" },
     },
   },
