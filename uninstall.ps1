@@ -13,7 +13,7 @@ $packages = @(
     @{ Name = "Ripgrep"; Id = "BurntSushi.ripgrep.MSVC" },
     @{ Name = "FD-find"; Id = "sharkdp.fd" },
     @{ Name = "LazyGit"; Id = "JesseDuffield.lazygit" },
-    @{ Name = "Zig Compiler"; Id = "zig.zig" },
+    @{ Name = "Zig Compiler"; Id = "zig.zig" }
 )
 
 Write-Host "`n[1/2] Desinstalando ferramentas instaladas pelo setup..." -ForegroundColor Yellow
