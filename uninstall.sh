@@ -1,11 +1,11 @@
 #!/bin/bash
-# Uninstall script for LazyVim Setup & Dependencies on Linux
+# Uninstall script for Neovim Setup & Dependencies on Linux
 # Runs via: curl -fsSL https://raw.githubusercontent.com/henriwasd/nvim/master/uninstall.sh | bash
 
 set -e
 
 echo "============================================="
-echo "   LazyVim Uninstall & Cleanup (Linux)       "
+echo "   Neovim Uninstall & Cleanup (Linux)        "
 echo "============================================="
 
 NVIM_SHARE="$HOME/.local/share/nvim"

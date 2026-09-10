@@ -7,7 +7,8 @@ foo.*
 *.log
 data
 
-# Configurações e estados locais do LazyVim (evita conflitos entre PCs)
+# Configurações e estados locais (evita conflitos entre PCs)
 lazyvim.json
 lazy-lock.json
+nvim-pack-lock.json
 .luarc.json

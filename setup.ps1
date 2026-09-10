@@ -4,7 +4,7 @@
 $ErrorActionPreference = "Stop"
 
 Write-Host "=============================================" -ForegroundColor Cyan
-Write-Host "   LazyVim Complete Setup & Dependencies     " -ForegroundColor Cyan
+Write-Host "   Neovim Native Setup & Dependencies        " -ForegroundColor Cyan
 Write-Host "=============================================" -ForegroundColor Cyan
 
 $NvimDir = Join-Path $env:LOCALAPPDATA "nvim"

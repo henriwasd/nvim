@@ -1,27 +1,27 @@
 # 🤖 Instruções para Agentes de IA (Antigravity / agy)
 
-Este repositório contém a configuração do Neovim (baseada em LazyVim) do usuário, otimizada tanto para um notebook de baixo desempenho quanto para sincronização limpa entre múltiplos computadores com diferentes focos de desenvolvimento.
+Este repositório contém a configuração **Nativa de Alta Performance** do Neovim (v0.12+) do usuário, focada em zero bloat, inicialização instantânea e uso máximo dos recursos nativos do editor.
+
+> [!IMPORTANT]
+> **Consulte obrigatoriamente o arquivo [AGY_CONTEXT.md](AGY_CONTEXT.md) antes de realizar quaisquer alterações.**
+> Ele contém todo o histórico da migração (saída do LazyVim para o Neovim Nativo), a localização dos backups, a lista completa de decisões de arquitetura e o guia passo a passo para manutenção em notebooks e outros PCs.
 
 ---
 
-## ⚙️ Regras de Arquitetura & Git (IMPORTANTE)
+## ⚙️ Regras Principais de Arquitetura
 
-1. **Arquivos Ignorados Localmente**:
-   - `lazyvim.json`, `lazy-lock.json` e `.luarc.json` estão propositalmente no `.gitignore`.
-   - **NÃO adicione ou force o commit desses arquivos.** Cada PC possui seus próprios extras instalados (ex: diferentes linguagens de programação, AI autocompletes locais) e versões de pacotes.
-2. **Filosofia de Otimização (Notebook Fraco)**:
-   - A configuração na branch `master` deve permanecer o mais fluida possível.
-   - **Sem Formatação Automática**: O recurso de auto-format está desligado globalmente via `vim.g.autoformat = false` em `lua/config/options.lua`. Não mude essa opção sem permissão explícita do usuário.
-   - **Sem Plugins Visuais Pesados**: Plugins que consomem muita GPU/CPU de renderização de terminal (como `noice.nvim` e `mini.animate`) estão desativados em `lua/plugins/disabled.lua`. Mantenha-os desativados para evitar lag de escrita (input lag).
-   - **Explorador de Arquivos**: O `neo-tree.nvim` está desativado. Usamos o **`oil.nvim`** (`lua/plugins/oil.lua`), que é extremamente leve e rápido.
-3. **Backup**:
-   - A configuração antiga pura do Neovim (sem o framework LazyVim) está guardada de forma segura na branch `backup-pure-nvim`.
-
----
-
-## 🛠️ Modificando as Configurações
-
-* Se o usuário pedir para adicionar um novo plugin ou atalho:
-  - Adicione o plugin na pasta `lua/plugins/` criando um novo arquivo específico (ex: `lua/plugins/novo_plugin.lua`).
-  - Configure de forma que use **Lazy Loading** (eventos como `VeryLazy`, `LspAttach`, `BufReadPost`, etc.) sempre que possível para não degradar o tempo de inicialização do notebook.
-  - Se for um plugin específico para apenas uma das máquinas, confirme com o usuário se a importação deve ser condicional ou manual através do `:LazyExtras` local (sem commitar).
+1. **Backups Preservados**:
+   - A configuração antiga pura do Neovim está guardada na branch `backup-pure-nvim`.
+   - A configuração do LazyVim está preservada no histórico git.
+2. **Filosofia de Alta Performance (Notebooks e PCs Fracos)**:
+   - **Zero Frameworks Pesados**: Não reinstale LazyVim nem lazy.nvim. O gerenciamento de pacotes é feito pela API nativa **`vim.pack`** do Neovim 0.12 (`lua/plugins.lua`).
+   - **Autocomplete 100% Nativo**: Usamos `vim.lsp.completion` do Neovim com o popup menu e snippets nativos (`vim.snippet`).
+   - **Tema Nativo**: Usamos `retrobox` (o Gruvbox oficial embutido no Neovim) com transparência configurada nativamente.
+   - **Statusline Nativa**: Implementada em Lua puro (`lua/config/statusline.lua`), sem bibliotecas externas pesadas.
+   - **Terminal Flutuante Nativo**: Implementado via `nvim_open_win` e jobs nativos (`lua/config/terminal.lua`).
+   - **Sem Formatação Automática ao Salvar**: O recurso de auto-format está desligado globalmente via `vim.g.autoformat = false`. Formatação manual disponível via `<leader>cf`.
+   - **Explorador de Arquivos**: Usamos o **`oil.nvim`**, que edita diretórios como um buffer de texto nativo.
+3. **Como Modificar**:
+   - Novos plugins essenciais devem ser adicionados na lista `M.specs` em `lua/plugins.lua` através de URLs completas de git (ex: `'https://github.com/autor/repo'`).
+   - Atualizações de plugins podem ser feitas via `:PackUpdate`.
+   - Novos servidores LSP devem ser configurados em `lua/lsp/init.lua` via `vim.lsp.config(...)` e `vim.lsp.enable(...)`.
