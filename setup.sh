@@ -5,7 +5,7 @@
 set -e
 
 echo "============================================="
-echo "   LazyVim Complete Setup & Dependencies     "
+echo "   Neovim Native Setup & Dependencies        "
 echo "                (Linux)                      "
 echo "============================================="
 

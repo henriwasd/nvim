@@ -1,10 +1,10 @@
-# Uninstall script for LazyVim Setup & Dependencies on Windows
+# Uninstall script for Neovim Setup & Dependencies on Windows
 # Runs via: powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/henriwasd/nvim/master/uninstall.ps1 | iex"
 
 $ErrorActionPreference = "Continue"
 
 Write-Host "=============================================" -ForegroundColor Red
-Write-Host "  LazyVim Uninstall & Cleanup Script        " -ForegroundColor Red
+Write-Host "  Neovim Uninstall & Cleanup Script         " -ForegroundColor Red
 Write-Host "=============================================" -ForegroundColor Red
 
 # List of Winget Package IDs installed by setup.ps1
